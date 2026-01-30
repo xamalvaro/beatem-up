@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=3 format=3 uid="uid://dnch1yarfcv30"]
+
+[ext_resource type="Script" uid="uid://l4oxgp0u6rct" path="res://scripts/inventory/item.gd" id="1_8umpu"]
+[ext_resource type="Texture2D" uid="uid://po2rc665uie6" path="res://icon.svg" id="1_nuijp"]
+
+[resource]
+script = ExtResource("1_8umpu")
+item_name = "bandage"
+description = "Heals 20 dmg"
+icon = ExtResource("1_nuijp")
+use_effect = "heal_20"
+metadata/_custom_type_script = "uid://l4oxgp0u6rct"
