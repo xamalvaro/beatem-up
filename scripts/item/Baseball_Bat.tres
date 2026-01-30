@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=3 format=3 uid="uid://0fqtotdl3n8h"]
+
+[ext_resource type="Script" uid="uid://l4oxgp0u6rct" path="res://scripts/inventory/item.gd" id="1_260r5"]
+[ext_resource type="Texture2D" uid="uid://po2rc665uie6" path="res://icon.svg" id="1_l6xca"]
+
+[resource]
+script = ExtResource("1_260r5")
+item_name = "BaseBall Bat"
+description = "A wooden bat for melee combat"
+icon = ExtResource("1_l6xca")
+can_equip = true
+throw_damage = 15
+metadata/_custom_type_script = "uid://l4oxgp0u6rct"

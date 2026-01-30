@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=3 format=3 uid="uid://c8i4prqmrw3a1"]
+
+[ext_resource type="Script" uid="uid://l4oxgp0u6rct" path="res://scripts/inventory/item.gd" id="1_ak2dj"]
+[ext_resource type="Texture2D" uid="uid://po2rc665uie6" path="res://icon.svg" id="1_tru5s"]
+
+[resource]
+script = ExtResource("1_ak2dj")
+item_name = "EnergyDrink"
+description = "Boosts speed temporarily"
+icon = ExtResource("1_tru5s")
+stack_size = 3
+metadata/_custom_type_script = "uid://l4oxgp0u6rct"
