@@ -1,9 +1,12 @@
-[gd_scene format=3 uid="uid://biuk3nkpq6ue0"]
+[gd_scene load_steps=2 format=3 uid="uid://biuk3nkpq6ue0"]
+
+[ext_resource type="Script" uid="uid://ba7tgscku13xk" path="res://scripts/ui/inventory_ui.gd" id="1_5entl"]
 
 [node name="InventoryUI" type="CanvasLayer"]
 layer = 10
+script = ExtResource("1_5entl")
 
-[node name="backgroundPanel" type="Panel" parent="."]
+[node name="BackgroundPanel" type="Panel" parent="."]
 custom_minimum_size = Vector2(400, 500)
 anchors_preset = 8
 anchor_left = 0.5
@@ -17,7 +20,7 @@ offset_bottom = 250.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="backgroundPanel"]
+[node name="MarginContainer" type="MarginContainer" parent="BackgroundPanel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -29,37 +32,37 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="backgroundPanel/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="BackgroundPanel/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Inventory" type="Label" parent="backgroundPanel/MarginContainer/VBoxContainer"]
+[node name="Inventory" type="Label" parent="BackgroundPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Inventory"
 horizontal_alignment = 1
 
-[node name="SlotsGrid" type="GridContainer" parent="backgroundPanel/MarginContainer/VBoxContainer"]
+[node name="SlotsGrid" type="GridContainer" parent="BackgroundPanel/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 450)
 layout_mode = 2
 columns = 5
 
-[node name="HBoxContainer" type="HBoxContainer" parent="backgroundPanel/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="BackgroundPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Use" type="Button" parent="backgroundPanel/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="UseButton" type="Button" parent="BackgroundPanel/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "Use"
 
-[node name="Equip" type="Button" parent="backgroundPanel/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="EquipButton" type="Button" parent="BackgroundPanel/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "Equip"
 
-[node name="Drop" type="Button" parent="backgroundPanel/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="DropButton" type="Button" parent="BackgroundPanel/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "Drop"
 
-[node name="ItemTooltip" type="Panel" parent="backgroundPanel"]
+[node name="ItemTooltip" type="Panel" parent="BackgroundPanel"]
 visible = false
 layout_mode = 0
 offset_right = 40.0

@@ -203,10 +203,6 @@ func update_button_states() -> void:
 	else:
 		equip_button.text = "Equip"
 
-func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("inventory"):
-		toggle_inventory()
-
 func _process(_delta: float) -> void:
 	# Debug: Press P to print inventory contents
 	if Input.is_action_just_pressed("ui_cancel"):  # ESC key for testing
