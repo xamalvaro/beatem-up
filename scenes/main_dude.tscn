@@ -1,4 +1,4 @@
-[gd_scene load_steps=62 format=3 uid="uid://exq70yhws4mk"]
+[gd_scene load_steps=71 format=3 uid="uid://exq70yhws4mk"]
 
 [ext_resource type="Script" uid="uid://doiw5774umhol" path="res://scripts/main_dude.gd" id="1_imk3f"]
 [ext_resource type="Texture2D" uid="uid://cdst75kjukgw5" path="res://assets/Don's sprite animation/Player_Concept.png" id="2_n3ej1"]
@@ -6,6 +6,15 @@
 [ext_resource type="Script" uid="uid://dt5j6mpvak21a" path="res://scripts/States/idle_state.gd" id="4_vk2w2"]
 [ext_resource type="Script" uid="uid://c3ehcg6mord4t" path="res://scripts/States/run_state.gd" id="5_cstp5"]
 [ext_resource type="Script" uid="uid://rqx1guppwde8" path="res://scripts/States/jump_state.gd" id="6_w0us6"]
+[ext_resource type="Script" uid="uid://dvumudi88i370" path="res://scripts/States/stomp_state.gd" id="7_ch0gb"]
+[ext_resource type="Script" uid="uid://b10o5te4smxrs" path="res://scripts/States/stomp2_state.gd" id="8_4ud2p"]
+[ext_resource type="Script" uid="uid://dbqh8ki343q8y" path="res://scripts/States/stomp3_state.gd" id="9_yvq3c"]
+[ext_resource type="Script" uid="uid://buhkffl7f6yip" path="res://scripts/States/sweep_state.gd" id="10_i5gdq"]
+[ext_resource type="Script" uid="uid://cvuntupvrexge" path="res://scripts/States/drop_kick_state.gd" id="11_s1h8e"]
+[ext_resource type="Script" uid="uid://pr6b5br7fhyf" path="res://scripts/States/crouch_state.gd" id="12_4wouk"]
+[ext_resource type="Script" uid="uid://h36w06pmavih" path="res://scripts/States/crouch_walk_state.gd" id="13_fhthk"]
+[ext_resource type="Script" uid="uid://b20pw8prwvo5k" path="res://scripts/States/crawl_state.gd" id="14_6itht"]
+[ext_resource type="Script" uid="uid://cp6wi2s8lxedb" path="res://scripts/States/pushup_state.gd" id="15_eb7yp"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_yvq3c"]
 atlas = ExtResource("2_n3ej1")
@@ -440,9 +449,8 @@ script = ExtResource("1_imk3f")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_w0us6")
-animation = &"pushup"
+animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.49863476
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CapsuleShape2D_lkuin")
@@ -459,3 +467,30 @@ script = ExtResource("5_cstp5")
 
 [node name="Jump" type="Node" parent="State_machine"]
 script = ExtResource("6_w0us6")
+
+[node name="Stomp" type="Node" parent="State_machine"]
+script = ExtResource("7_ch0gb")
+
+[node name="Stomp2" type="Node" parent="State_machine"]
+script = ExtResource("8_4ud2p")
+
+[node name="Stomp3" type="Node" parent="State_machine"]
+script = ExtResource("9_yvq3c")
+
+[node name="Sweep" type="Node" parent="State_machine"]
+script = ExtResource("10_i5gdq")
+
+[node name="DropKick" type="Node" parent="State_machine"]
+script = ExtResource("11_s1h8e")
+
+[node name="Crouch" type="Node" parent="State_machine"]
+script = ExtResource("12_4wouk")
+
+[node name="CrouchWalk" type="Node" parent="State_machine"]
+script = ExtResource("13_fhthk")
+
+[node name="Crawl" type="Node" parent="State_machine"]
+script = ExtResource("14_6itht")
+
+[node name="Pushup" type="Node" parent="State_machine"]
+script = ExtResource("15_eb7yp")

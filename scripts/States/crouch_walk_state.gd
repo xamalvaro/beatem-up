@@ -1,34 +1,35 @@
 extends State
 
+const CROUCH_SPEED = 50.0
+
 func enter() -> void:
-	player.get_node("AnimatedSprite2D").play("run")
+	player.get_node("AnimatedSprite2D").play("crouch_walk")
 
 func physics_update(delta: float) -> void:
 	# Apply gravity
 	if not player.is_on_floor():
 		player.velocity.y += player.get_gravity().y * delta
 	
-	# Get input
 	var direction = Input.get_axis("ui_left", "ui_right")
 	var is_down = Input.is_action_pressed("ui_down")
 	
-	# Check for transitions
-	if direction == 0:
+	# Transitions
+	if not is_down:
+		# Stand up
 		transitioned.emit("idle")
-	elif Input.is_action_just_pressed("ui_accept") and player.is_on_floor():
-		transitioned.emit("jump")
-	elif is_down and Input.is_action_just_pressed("attack_a"):
-		transitioned.emit("sweep")
-	elif is_down:
+	elif direction == 0:
+		# Stop moving
 		transitioned.emit("crouch")
 	elif Input.is_action_just_pressed("attack_a"):
-		transitioned.emit("stomp")
+		transitioned.emit("sweep")
 	elif Input.is_action_just_pressed("attack_b"):
 		transitioned.emit("crawl")
 	
-	# Apply movement
+	# Move slowly while crouched
 	if direction != 0:
-		player.velocity.x = direction * player.SPEED
+		player.velocity.x = direction * CROUCH_SPEED
 		player.get_node("AnimatedSprite2D").flip_h = direction < 0
+	else:
+		player.velocity.x = move_toward(player.velocity.x, 0, CROUCH_SPEED)
 	
 	player.move_and_slide()

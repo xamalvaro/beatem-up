@@ -12,6 +12,10 @@ func physics_update(delta: float) -> void:
 		# Land
 		transitioned.emit("idle")
 	
+	# Aerial attack
+	if Input.is_action_just_pressed("attack_a"):
+		transitioned.emit("drop_kick")
+	
 	# Allow air control
 	var direction = Input.get_axis("ui_left", "ui_right")
 	if direction != 0:
