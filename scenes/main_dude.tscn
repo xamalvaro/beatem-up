@@ -1,4 +1,4 @@
-[gd_scene load_steps=71 format=3 uid="uid://exq70yhws4mk"]
+[gd_scene load_steps=78 format=3 uid="uid://exq70yhws4mk"]
 
 [ext_resource type="Script" uid="uid://doiw5774umhol" path="res://scripts/main_dude.gd" id="1_imk3f"]
 [ext_resource type="Texture2D" uid="uid://cdst75kjukgw5" path="res://assets/Don's sprite animation/Player_Concept.png" id="2_n3ej1"]
@@ -13,8 +13,15 @@
 [ext_resource type="Script" uid="uid://cvuntupvrexge" path="res://scripts/States/drop_kick_state.gd" id="11_s1h8e"]
 [ext_resource type="Script" uid="uid://pr6b5br7fhyf" path="res://scripts/States/crouch_state.gd" id="12_4wouk"]
 [ext_resource type="Script" uid="uid://h36w06pmavih" path="res://scripts/States/crouch_walk_state.gd" id="13_fhthk"]
-[ext_resource type="Script" uid="uid://b20pw8prwvo5k" path="res://scripts/States/crawl_state.gd" id="14_6itht"]
+[ext_resource type="Script" uid="uid://b20pw8prwvo5k" path="res://scripts/States/crawl_idle_state.gd" id="14_6itht"]
 [ext_resource type="Script" uid="uid://cp6wi2s8lxedb" path="res://scripts/States/pushup_state.gd" id="15_eb7yp"]
+[ext_resource type="Script" uid="uid://cae8dx2qemy8" path="res://scripts/States/crawlsweep_state.gd" id="16_4ud2p"]
+[ext_resource type="Script" uid="uid://cytcqxd24ajp0" path="res://scripts/States/crawl_enter_state.gd" id="16_i5gdq"]
+[ext_resource type="Script" uid="uid://h017w27hm8ms" path="res://scripts/States/crawl_move_state.gd" id="18_s1h8e"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y12ej"]
+atlas = ExtResource("2_n3ej1")
+region = Rect2(192, 128, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_yvq3c"]
 atlas = ExtResource("2_n3ej1")
@@ -91,6 +98,18 @@ region = Rect2(96, 128, 32, 32)
 [sub_resource type="AtlasTexture" id="AtlasTexture_wmm0w"]
 atlas = ExtResource("2_n3ej1")
 region = Rect2(128, 128, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ew57s"]
+atlas = ExtResource("2_n3ej1")
+region = Rect2(160, 160, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_miibw"]
+atlas = ExtResource("2_n3ej1")
+region = Rect2(128, 160, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_15id0"]
+atlas = ExtResource("2_n3ej1")
+region = Rect2(96, 160, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_beasg"]
 atlas = ExtResource("2_n3ej1")
@@ -232,6 +251,14 @@ region = Rect2(64, 256, 32, 32)
 animations = [{
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_y12ej")
+}],
+"loop": true,
+"name": &"crawl",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_yvq3c")
 }, {
 "duration": 1.0,
@@ -247,8 +274,8 @@ animations = [{
 "texture": SubResource("AtlasTexture_fhthk")
 }],
 "loop": true,
-"name": &"crawl",
-"speed": 5.0
+"name": &"crawl_move",
+"speed": 6.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -279,7 +306,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"crouch_walk",
-"speed": 5.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -305,6 +332,20 @@ animations = [{
 }],
 "loop": true,
 "name": &"drop_kick",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ew57s")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_miibw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_15id0")
+}],
+"loop": true,
+"name": &"going_prone",
 "speed": 5.0
 }, {
 "frames": [{
@@ -336,7 +377,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"jumping",
-"speed": 3.0
+"speed": 4.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -382,7 +423,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"run",
-"speed": 5.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -402,7 +443,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"stomp",
-"speed": 5.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -437,7 +478,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"sweep",
-"speed": 5.0
+"speed": 10.0
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_lkuin"]
@@ -449,8 +490,9 @@ script = ExtResource("1_imk3f")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_w0us6")
-animation = &"idle"
+animation = &"crawl_move"
 autoplay = "idle"
+frame_progress = 0.97141546
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CapsuleShape2D_lkuin")
@@ -468,29 +510,38 @@ script = ExtResource("5_cstp5")
 [node name="Jump" type="Node" parent="State_machine"]
 script = ExtResource("6_w0us6")
 
-[node name="Stomp" type="Node" parent="State_machine"]
-script = ExtResource("7_ch0gb")
-
-[node name="Stomp2" type="Node" parent="State_machine"]
-script = ExtResource("8_4ud2p")
-
-[node name="Stomp3" type="Node" parent="State_machine"]
-script = ExtResource("9_yvq3c")
-
-[node name="Sweep" type="Node" parent="State_machine"]
-script = ExtResource("10_i5gdq")
-
-[node name="DropKick" type="Node" parent="State_machine"]
-script = ExtResource("11_s1h8e")
-
 [node name="Crouch" type="Node" parent="State_machine"]
 script = ExtResource("12_4wouk")
 
 [node name="CrouchWalk" type="Node" parent="State_machine"]
 script = ExtResource("13_fhthk")
 
-[node name="Crawl" type="Node" parent="State_machine"]
-script = ExtResource("14_6itht")
-
 [node name="Pushup" type="Node" parent="State_machine"]
 script = ExtResource("15_eb7yp")
+
+[node name="CrawlMove" type="Node" parent="State_machine"]
+script = ExtResource("18_s1h8e")
+
+[node name="CrawlIdle" type="Node" parent="State_machine"]
+script = ExtResource("14_6itht")
+
+[node name="CrawlEnter" type="Node" parent="State_machine"]
+script = ExtResource("16_i5gdq")
+
+[node name="Stomp3" type="Node" parent="State_machine"]
+script = ExtResource("9_yvq3c")
+
+[node name="Stomp" type="Node" parent="State_machine"]
+script = ExtResource("7_ch0gb")
+
+[node name="Stomp2" type="Node" parent="State_machine"]
+script = ExtResource("8_4ud2p")
+
+[node name="DropKick" type="Node" parent="State_machine"]
+script = ExtResource("11_s1h8e")
+
+[node name="Sweep" type="Node" parent="State_machine"]
+script = ExtResource("10_i5gdq")
+
+[node name="CrawlSweep" type="Node" parent="State_machine"]
+script = ExtResource("16_4ud2p")

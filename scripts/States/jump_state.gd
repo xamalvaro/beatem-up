@@ -3,6 +3,7 @@ extends State
 func enter() -> void:
 	player.velocity.y = player.JUMP_VELOCITY
 	player.get_node("AnimatedSprite2D").play("jumping")
+	print(">>> Entered JUMP state")
 
 func physics_update(delta: float) -> void:
 	# Apply gravity
@@ -10,11 +11,13 @@ func physics_update(delta: float) -> void:
 		player.velocity.y += player.get_gravity().y * delta
 	else:
 		# Land
+		print(">>> Landed - transitioning to idle")
 		transitioned.emit("idle")
 	
-	# Aerial attack
+	# Aerial attack - emit "dropkick" (lowercase)
 	if Input.is_action_just_pressed("attack_a"):
-		transitioned.emit("drop_kick")
+		print(">>> Attempting transition to dropkick")
+		transitioned.emit("dropkick")  # Changed to lowercase
 	
 	# Allow air control
 	var direction = Input.get_axis("ui_left", "ui_right")

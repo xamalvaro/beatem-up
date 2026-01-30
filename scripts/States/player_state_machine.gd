@@ -1,17 +1,14 @@
 extends Node
 class_name PlayerStateMachine
 
-# Export the initial state so you can set it in the editor
 @export var initial_state: State
 
 var current_state: State
 var states: Dictionary = {}
 
-# Reference to the player
 @onready var player = get_parent() as CharacterBody2D
 
 func _ready() -> void:
-	# Wait for player to be ready
 	await owner.ready
 	
 	# Collect all child states
@@ -20,11 +17,13 @@ func _ready() -> void:
 			states[child.name.to_lower()] = child
 			child.player = player
 			child.transitioned.connect(on_state_transition)
+			print("Registered state: " + child.name.to_lower())  # Debug print
 	
 	# Start with initial state
 	if initial_state:
 		initial_state.enter()
 		current_state = initial_state
+		print("Starting state: " + initial_state.name)
 
 func _process(delta: float) -> void:
 	if current_state:
@@ -38,7 +37,8 @@ func on_state_transition(new_state_name: String) -> void:
 	var new_state = states.get(new_state_name.to_lower())
 	
 	if !new_state:
-		print("State not found: " + new_state_name)
+		print("ERROR: State not found: " + new_state_name)
+		print("Available states: " + str(states.keys()))
 		return
 	
 	if new_state == current_state:
@@ -49,5 +49,6 @@ func on_state_transition(new_state_name: String) -> void:
 		current_state.exit()
 	
 	# Enter new state
+	print("Transitioning: " + current_state.name + " -> " + new_state.name)
 	current_state = new_state
 	current_state.enter()

@@ -1,10 +1,10 @@
 extends State
 
 var attack_timer: float = 0.0
-var attack_duration: float = 0.5  # Adjust based on your animation length
+var attack_duration: float = 0.5
 var attack_finished: bool = false
 var combo_timer: float = 0.0
-var combo_window: float = 0.4
+var combo_window: float = 0.3
 
 func enter() -> void:
 	attack_timer = 0.0
@@ -12,10 +12,10 @@ func enter() -> void:
 	combo_timer = 0.0
 	player.velocity.x = 0
 	player.get_node("AnimatedSprite2D").play("sweep")
-	print(">>> Entered SWEEP state")
+	print(">>> Entered CRAWL SWEEP state (attack from prone)")
 
 func exit() -> void:
-	print(">>> Exited SWEEP state")
+	print(">>> Exited CRAWL SWEEP state")
 
 func physics_update(delta: float) -> void:
 	attack_timer += delta
@@ -30,22 +30,16 @@ func physics_update(delta: float) -> void:
 	# Wait for attack to finish
 	if not attack_finished and attack_timer >= attack_duration:
 		attack_finished = true
-		print(">>> SWEEP attack finished - combo window open")
+		print(">>> CRAWL SWEEP finished - forcing recovery")
 	
-	# After attack finishes, check for combo or return to idle
+	# After attack finishes, must do recovery (punishment)
 	if attack_finished:
 		combo_timer += delta
 		
-		if combo_timer < combo_window:
-			# Check for combo into stomp
-			if Input.is_action_just_pressed("attack_a"):
-				print(">>> SWEEP: Combo into stomp")
-				transitioned.emit("stomp")
-				return
-		else:
-			# Combo window expired, return to idle
-			print(">>> SWEEP: Combo window expired, returning to idle")
-			transitioned.emit("idle")
+		if combo_timer >= combo_window:
+			# Force recovery after sweep from crawl
+			print(">>> CRAWL SWEEP: Forcing pushup recovery")
+			transitioned.emit("pushup")
 			return
 	
 	player.move_and_slide()

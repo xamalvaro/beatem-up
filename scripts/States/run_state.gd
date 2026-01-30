@@ -23,8 +23,8 @@ func physics_update(delta: float) -> void:
 		transitioned.emit("crouch")
 	elif Input.is_action_just_pressed("attack_a"):
 		transitioned.emit("stomp")
-	elif Input.is_action_just_pressed("attack_b"):
-		transitioned.emit("crawl")
+	elif Input.is_action_just_pressed("crawl"):
+		transitioned.emit("crawlenter")  # Changed to crawlenter
 	
 	# Apply movement
 	if direction != 0:

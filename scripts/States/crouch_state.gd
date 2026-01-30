@@ -1,15 +1,17 @@
 extends State
 
-var crouch_time: float = 0.0
+var has_attacked: bool = false
 
 func enter() -> void:
 	player.get_node("AnimatedSprite2D").play("crouch")
-	crouch_time = 0.0
 	player.velocity.x = 0
+	has_attacked = false
+	print(">>> Entered CROUCH state")
+
+func exit() -> void:
+	print(">>> Exited CROUCH state")
 
 func physics_update(delta: float) -> void:
-	crouch_time += delta
-	
 	# Apply gravity
 	if not player.is_on_floor():
 		player.velocity.y += player.get_gravity().y * delta
@@ -19,17 +21,25 @@ func physics_update(delta: float) -> void:
 	
 	# Transitions from crouch
 	if not is_down:
-		# Stand up
+		print(">>> Crouch: Standing up")
 		transitioned.emit("idle")
-	elif direction != 0:
-		# Move while crouched
-		transitioned.emit("crouch_walk")
-	elif Input.is_action_just_pressed("attack_a"):
-		# Sweep from crouch
+		return
+	
+	if direction != 0:
+		print(">>> Crouch: Starting crouch walk")
+		transitioned.emit("crouchwalk")
+		return
+	
+	if Input.is_action_just_pressed("attack_a") and not has_attacked:
+		has_attacked = true
+		print(">>> Crouch: Starting sweep attack")
 		transitioned.emit("sweep")
-	elif Input.is_action_just_pressed("attack_b"):
-		# Go into crawl
-		transitioned.emit("crawl")
+		return
+	
+	if Input.is_action_just_pressed("crawl"):
+		print(">>> Crouch: Going into prone")
+		transitioned.emit("crawlenter")  # Changed to crawlenter
+		return
 	
 	player.velocity.x = 0
 	player.move_and_slide()

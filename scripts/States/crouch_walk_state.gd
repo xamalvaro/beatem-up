@@ -17,13 +17,20 @@ func physics_update(delta: float) -> void:
 	if not is_down:
 		# Stand up
 		transitioned.emit("idle")
-	elif direction == 0:
+		return
+	
+	if direction == 0:
 		# Stop moving
 		transitioned.emit("crouch")
-	elif Input.is_action_just_pressed("attack_a"):
+		return
+	
+	if Input.is_action_just_pressed("attack_a"):
 		transitioned.emit("sweep")
-	elif Input.is_action_just_pressed("attack_b"):
-		transitioned.emit("crawl")
+		return
+	
+	if Input.is_action_just_pressed("crawl"):
+		transitioned.emit("crawlenter")  # Changed to crawlenter
+		return
 	
 	# Move slowly while crouched
 	if direction != 0:

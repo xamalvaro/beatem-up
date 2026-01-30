@@ -22,9 +22,9 @@ func physics_update(delta: float) -> void:
 	elif is_down:
 		transitioned.emit("crouch")
 	elif Input.is_action_just_pressed("attack_a"):
-		transitioned.emit("stomp")  # Changed from attack_a
-	elif Input.is_action_just_pressed("attack_b"):
-		transitioned.emit("crawl")  # B goes into crawl
+		transitioned.emit("stomp")
+	elif Input.is_action_just_pressed("crawl"):  # C to go prone
+		transitioned.emit("crawlenter")  # Changed to crawlenter
 	
 	# Apply movement
 	player.velocity.x = move_toward(player.velocity.x, 0, player.SPEED)

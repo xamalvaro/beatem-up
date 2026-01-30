@@ -1,7 +1,7 @@
 extends State
 
 var recovery_time: float = 0.0
-var recovery_duration: float = 0.5
+var recovery_duration: float = 0.6  # Made slightly longer
 
 func enter() -> void:
 	player.get_node("AnimatedSprite2D").play("pushup")
@@ -15,9 +15,10 @@ func physics_update(delta: float) -> void:
 	if not player.is_on_floor():
 		player.velocity.y += player.get_gravity().y * delta
 	
-	# After recovery animation, go to crouch
+	# Cannot cancel recovery - must finish
+	# After recovery animation, go to idle (stand up)
 	if recovery_time >= recovery_duration:
-		transitioned.emit("crouch")
+		transitioned.emit("idle")  # Stand up after recovery
 	
 	player.velocity.x = 0
 	player.move_and_slide()
