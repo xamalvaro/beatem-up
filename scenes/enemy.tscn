@@ -1,8 +1,7 @@
-[gd_scene load_steps=20 format=3 uid="uid://ceu1slwff0p16"]
+[gd_scene load_steps=19 format=3 uid="uid://ceu1slwff0p16"]
 
 [ext_resource type="Texture2D" uid="uid://dh8taa0yrrshn" path="res://assets/slime_purple.png" id="1_7p1mj"]
 [ext_resource type="Script" uid="uid://p13it6nx4bc6" path="res://scripts/enemy.gd" id="1_md0e3"]
-[ext_resource type="Script" uid="uid://lqyf5oyafvsn" path="res://scripts/States/state_machine.gd" id="3_4ra3w"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_7p1mj"]
 atlas = ExtResource("1_7p1mj")
@@ -140,9 +139,6 @@ shape = SubResource("CircleShape2D_g0wcc")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -6)
 shape = SubResource("CircleShape2D_s1ycm")
-
-[node name="Statemachine" type="Node" parent="."]
-script = ExtResource("3_4ra3w")
 
 [connection signal="body_entered" from="detection_area" to="." method="_on_detection_area_body_entered"]
 [connection signal="body_exited" from="detection_area" to="." method="_on_detection_area_body_exited"]
