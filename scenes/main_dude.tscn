@@ -1,7 +1,11 @@
-[gd_scene load_steps=20 format=3 uid="uid://exq70yhws4mk"]
+[gd_scene load_steps=24 format=3 uid="uid://exq70yhws4mk"]
 
 [ext_resource type="Script" uid="uid://doiw5774umhol" path="res://scripts/main_dude.gd" id="1_imk3f"]
 [ext_resource type="Texture2D" uid="uid://cdst75kjukgw5" path="res://assets/Don's sprite animation/Player_Concept.png" id="2_n3ej1"]
+[ext_resource type="Script" uid="uid://utnr0olxvfqi" path="res://scripts/States/player_state_machine.gd" id="3_n3ej1"]
+[ext_resource type="Script" uid="uid://dt5j6mpvak21a" path="res://scripts/States/idle_state.gd" id="4_vk2w2"]
+[ext_resource type="Script" uid="uid://c3ehcg6mord4t" path="res://scripts/States/run_state.gd" id="5_cstp5"]
+[ext_resource type="Script" uid="uid://rqx1guppwde8" path="res://scripts/States/jump_state.gd" id="6_w0us6"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_beasg"]
 atlas = ExtResource("2_n3ej1")
@@ -140,3 +144,16 @@ autoplay = "idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CapsuleShape2D_lkuin")
+
+[node name="State_machine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
+script = ExtResource("3_n3ej1")
+initial_state = NodePath("Idle")
+
+[node name="Idle" type="Node" parent="State_machine"]
+script = ExtResource("4_vk2w2")
+
+[node name="Run" type="Node" parent="State_machine"]
+script = ExtResource("5_cstp5")
+
+[node name="Jump" type="Node" parent="State_machine"]
+script = ExtResource("6_w0us6")
