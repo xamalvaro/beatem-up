@@ -6,7 +6,10 @@
 [resource]
 script = ExtResource("1_ak2dj")
 item_name = "EnergyDrink"
-description = "Boosts speed temporarily"
+description = "Boosts speed by 50% for 5 seconds"
 icon = ExtResource("1_tru5s")
 stack_size = 3
+can_equip = null
+throw_damage = null
+use_effect = "boost_speed"
 metadata/_custom_type_script = "uid://l4oxgp0u6rct"

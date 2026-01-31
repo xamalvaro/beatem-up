@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=4 uid="uid://dnyyok8yp7twl"]
+[gd_scene load_steps=16 format=4 uid="uid://dnyyok8yp7twl"]
 
 [ext_resource type="Texture2D" uid="uid://b77e7jugveswp" path="res://assets/CITY_TILES/CITY-TILES-.png" id="1_uwrxv"]
 [ext_resource type="PackedScene" uid="uid://exq70yhws4mk" path="res://scenes/main_dude.tscn" id="2_yqjtg"]
@@ -7,6 +7,7 @@
 [ext_resource type="Resource" uid="uid://dnch1yarfcv30" path="res://scripts/item/bandage.tres" id="5_iywne"]
 [ext_resource type="Resource" uid="uid://0fqtotdl3n8h" path="res://scripts/item/Baseball_Bat.tres" id="6_gee14"]
 [ext_resource type="Resource" uid="uid://c8i4prqmrw3a1" path="res://scripts/item/Energy_Drink.tres" id="7_0tnpc"]
+[ext_resource type="PackedScene" uid="uid://bp3rg815jjggs" path="res://scenes/UI/health_bar.tscn" id="8_0tnpc"]
 [ext_resource type="PackedScene" uid="uid://biuk3nkpq6ue0" path="res://scenes/UI/InventoryUI.tscn" id="8_vtaks"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_yqjtg"]
@@ -723,7 +724,7 @@ zoom = Vector2(4, 4)
 
 [node name="enemy" parent="." instance=ExtResource("3_lnu2h")]
 z_index = 5
-position = Vector2(-150, 50)
+position = Vector2(-138, -13)
 
 [node name="Bandage" parent="." instance=ExtResource("4_lbhrr")]
 z_index = 4
@@ -739,5 +740,7 @@ item_data = ExtResource("6_gee14")
 z_index = 5
 position = Vector2(59, 10)
 item_data = ExtResource("7_0tnpc")
+
+[node name="HealthBar" parent="." instance=ExtResource("8_0tnpc")]
 
 [node name="InventoryUI" parent="." instance=ExtResource("8_vtaks")]

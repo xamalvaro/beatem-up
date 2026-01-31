@@ -5,6 +5,8 @@ extends CanvasLayer
 @onready var use_button = $BackgroundPanel/MarginContainer/VBoxContainer/HBoxContainer/UseButton
 @onready var equip_button = $BackgroundPanel/MarginContainer/VBoxContainer/HBoxContainer/EquipButton
 @onready var drop_button = $BackgroundPanel/MarginContainer/VBoxContainer/HBoxContainer/DropButton
+@onready var throw_button = $BackgroundPanel/MarginContainer/VBoxContainer/HBoxContainer/ThrowButton
+
 
 var inventory: Inventory
 var slot_scene = preload("res://scenes/ui/inventory_slot.tscn")
@@ -19,10 +21,17 @@ func _ready() -> void:
 	visible = false
 	is_open = false
 	
+	# Disable focus on all buttons so mouse works properly
+	use_button.focus_mode = Control.FOCUS_NONE
+	equip_button.focus_mode = Control.FOCUS_NONE
+	drop_button.focus_mode = Control.FOCUS_NONE
+	throw_button.focus_mode = Control.FOCUS_NONE
+	
 	# Connect buttons
 	use_button.pressed.connect(_on_use_pressed)
 	equip_button.pressed.connect(_on_equip_pressed)
 	drop_button.pressed.connect(_on_drop_pressed)
+	throw_button.pressed.connect(_on_throw_pressed)
 	
 	# Wait for scene to be ready
 	await get_tree().process_frame
@@ -43,10 +52,17 @@ func _ready() -> void:
 	update_button_states()
 
 func _unhandled_input(event: InputEvent) -> void:
-	# Use _unhandled_input instead of _input for better control
+	# Toggle inventory with I key
 	if event.is_action_pressed("inventory"):
 		toggle_inventory()
 		get_viewport().set_input_as_handled()
+		return
+	
+	# Close inventory with Escape key
+	if is_open and event.is_action_pressed("ui_cancel"):
+		toggle_inventory()
+		get_viewport().set_input_as_handled()
+		return
 
 func toggle_inventory() -> void:
 	is_open = !is_open
@@ -177,11 +193,57 @@ func spawn_dropped_item(item: ItemData) -> void:
 	get_tree().root.add_child(pickup)
 	print(">>> Dropped item: " + item.item_name)
 
+func _on_throw_pressed() -> void:
+	if selected_slot >= 0 and inventory:
+		var item = inventory.throw_item(selected_slot)
+		
+		if item:
+			spawn_thrown_item(item)
+
+func spawn_thrown_item(item: ItemData) -> void:
+	var player = get_tree().get_first_node_in_group("player")
+	if not player:
+		print(">>> ERROR: Cannot throw - no player found")
+		return
+	
+	if not item.icon:
+		print(">>> ERROR: Item has no icon to throw")
+		return
+	
+	# Load the thrown item scene
+	var thrown_scene = load("res://scenes/thrown_item.tscn")
+	if not thrown_scene:
+		print(">>> ERROR: Could not load thrown_item.tscn")
+		return
+	
+	var thrown = thrown_scene.instantiate()
+	
+	# Calculate throw direction based on player facing
+	var throw_direction = Vector2.RIGHT
+	if player.has_node("AnimatedSprite2D"):
+		if player.get_node("AnimatedSprite2D").flip_h:
+			throw_direction = Vector2.LEFT
+	
+	var throw_velocity = throw_direction * 300  # Horizontal speed
+	throw_velocity.y = -150  # Upward arc (increased from -100)
+	
+	# Position at player chest height
+	thrown.position = player.global_position + Vector2(0, -8)
+	
+	# Setup BEFORE adding to scene (important!)
+	thrown.setup(item.icon, throw_velocity, item.throw_damage)
+	
+	# Add to scene root
+	get_tree().root.add_child(thrown)
+	
+	print(">>> Threw: " + item.item_name + " with " + str(item.throw_damage) + " damage")
+
 func update_button_states() -> void:
 	if selected_slot < 0 or not inventory:
 		use_button.disabled = true
 		equip_button.disabled = true
 		drop_button.disabled = true
+		throw_button.disabled = true
 		return
 	
 	var item = inventory.get_item(selected_slot)
@@ -190,18 +252,14 @@ func update_button_states() -> void:
 		use_button.disabled = true
 		equip_button.disabled = true
 		drop_button.disabled = true
+		throw_button.disabled = true
 		return
 	
 	# Enable/disable based on item type
 	use_button.disabled = (item.item_type != "consumable")
 	equip_button.disabled = not item.can_equip
 	drop_button.disabled = false
-	
-	# Update equip button text
-	if item == inventory.equipped_item:
-		equip_button.text = "Unequip"
-	else:
-		equip_button.text = "Equip"
+	throw_button.disabled = (item.throw_damage <= 0)
 
 func _process(_delta: float) -> void:
 	# Debug: Press P to print inventory contents

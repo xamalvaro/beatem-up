@@ -24,11 +24,11 @@ func physics_update(delta: float) -> void:
 	elif Input.is_action_just_pressed("attack_a"):
 		transitioned.emit("stomp")
 	elif Input.is_action_just_pressed("crawl"):
-		transitioned.emit("crawlenter")  # Changed to crawlenter
+		transitioned.emit("crawlenter")
 	
-	# Apply movement
+	# Apply movement WITH speed multiplier
 	if direction != 0:
-		player.velocity.x = direction * player.SPEED
+		player.velocity.x = direction * player.SPEED * player.speed_multiplier
 		player.get_node("AnimatedSprite2D").flip_h = direction < 0
 	
 	player.move_and_slide()

@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://ct64b366re0s6"]
+
+[ext_resource type="Script" uid="uid://dg1sp1q2sk6sf" path="res://scripts/thrown_item.gd" id="1_vbwfu"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_bpx4j"]
+
+[node name="ThrownItem" type="Area2D"]
+collision_layer = 16
+collision_mask = 6
+script = ExtResource("1_vbwfu")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.1796875, 0.1796875)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_bpx4j")
+
+[node name="Lifetime Timer" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true

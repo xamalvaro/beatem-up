@@ -159,3 +159,19 @@ func drop_item(slot_index: int, quantity: int = 1) -> ItemData:
 	
 	print(">>> Dropped: " + item.item_name + " x" + str(quantity))
 	return item
+	
+func throw_item(slot_index: int) -> ItemData:
+	var item = get_item(slot_index)
+	
+	if item == null:
+		return null
+	
+	if item.throw_damage <= 0:
+		print(">>> Cannot throw: " + item.item_name)
+		return null
+	
+	# Remove from inventory
+	remove_item(slot_index, 1)
+	
+	print(">>> Throwing: " + item.item_name)
+	return item

@@ -6,8 +6,10 @@
 [resource]
 script = ExtResource("1_260r5")
 item_name = "BaseBall Bat"
-description = "A wooden bat for melee combat"
+description = "A sturdy melee weapon"
 icon = ExtResource("1_l6xca")
+item_type = "weapon"
 can_equip = true
 throw_damage = 15
+weapon_damage = 25
 metadata/_custom_type_script = "uid://l4oxgp0u6rct"

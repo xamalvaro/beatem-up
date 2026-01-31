@@ -62,6 +62,10 @@ text = "Equip"
 layout_mode = 2
 text = "Drop"
 
+[node name="ThrowButton" type="Button" parent="BackgroundPanel/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Throw"
+
 [node name="ItemTooltip" type="Panel" parent="BackgroundPanel"]
 visible = false
 layout_mode = 0

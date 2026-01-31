@@ -1,6 +1,6 @@
 extends Panel
 
-signal slot_clicked(slot_index: int, button: int)
+signal slot_clicked(slot_index: int)
 signal slot_right_clicked(slot_index: int)
 
 @onready var item_icon: TextureRect = $ItemIcon
@@ -14,6 +14,10 @@ var quantity: int = 0
 func _ready() -> void:
 	slot_button.pressed.connect(_on_slot_pressed)
 	slot_button.gui_input.connect(_on_slot_gui_input)
+	
+	# IMPORTANT: Disable focus for buttons so mouse works properly
+	slot_button.focus_mode = Control.FOCUS_NONE
+	
 	update_display()
 
 func set_slot_data(index: int, item: ItemData, qty: int) -> void:
@@ -41,13 +45,13 @@ func update_display() -> void:
 			quantity_label.hide()
 
 func _on_slot_pressed() -> void:
-	slot_clicked.emit(slot_index, MOUSE_BUTTON_LEFT)
+	slot_clicked.emit(slot_index)
 
 func _on_slot_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
 			slot_right_clicked.emit(slot_index)
-			accept_event()
+			get_viewport().set_input_as_handled()
 
 func _get_drag_data(_at_position: Vector2) -> Variant:
 	if item_data == null:
@@ -69,12 +73,10 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 	}
 
 func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
-	# Can always drop items into slots
 	return data is Dictionary and data.has("slot_index")
 
 func _drop_data(_at_position: Vector2, data: Variant) -> void:
 	if data is Dictionary and data.has("slot_index"):
-		# Tell the inventory to swap these slots
-		var inventory = get_tree().get_first_node_in_group("inventory_ui")
-		if inventory:
-			inventory.swap_slots(data.slot_index, slot_index)
+		var inventory_ui = get_tree().get_first_node_in_group("inventory_ui")
+		if inventory_ui:
+			inventory_ui.swap_slots(data.slot_index, slot_index)

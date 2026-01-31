@@ -4,7 +4,6 @@ extends Area2D
 @export var quantity: int = 1
 
 @onready var sprite = $Sprite2D
-@onready var label = $Label  # Optional
 
 var player_nearby: bool = false
 var player_ref = null
@@ -13,10 +12,6 @@ func _ready() -> void:
 	# Set up the sprite
 	if item_data and item_data.icon:
 		sprite.texture = item_data.icon
-	
-	# Optional label
-	if label and item_data:
-		label.text = item_data.item_name
 	
 	# Connect signals
 	body_entered.connect(_on_body_entered)
@@ -30,18 +25,15 @@ func _on_body_entered(body: Node2D) -> void:
 	if body.is_in_group("player"):
 		player_nearby = true
 		player_ref = body
-		show_pickup_prompt()
 		print(">>> Near item: " + item_data.item_name)
 
 func _on_body_exited(body: Node2D) -> void:
 	if body.is_in_group("player"):
 		player_nearby = false
 		player_ref = null
-		hide_pickup_prompt()
-		print(">>> Left item area")
 
 func _process(_delta: float) -> void:
-	if player_nearby and Input.is_action_just_pressed("pickup"):  # We'll add this input
+	if player_nearby and Input.is_action_just_pressed("pickup"):
 		pickup()
 
 func pickup() -> void:
@@ -53,12 +45,3 @@ func pickup() -> void:
 			queue_free()  # Remove from world
 		else:
 			print(">>> Inventory full!")
-
-func show_pickup_prompt() -> void:
-	# You can create a UI element to show "Press E to pick up"
-	if label:
-		label.show()
-
-func hide_pickup_prompt() -> void:
-	if label:
-		label.hide()
