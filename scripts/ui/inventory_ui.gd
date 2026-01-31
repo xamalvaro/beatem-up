@@ -123,7 +123,7 @@ func refresh_inventory() -> void:
 	
 	update_button_states()
 
-func _on_slot_clicked(slot_index: int, _button: int) -> void:
+func _on_slot_clicked(slot_index: int) -> void:
 	selected_slot = slot_index
 	print(">>> Selected slot: " + str(slot_index))
 	
