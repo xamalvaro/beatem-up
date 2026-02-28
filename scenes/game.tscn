@@ -719,12 +719,12 @@ z_index = 5
 position = Vector2(-26, -1)
 
 [node name="Camera2D" type="Camera2D" parent="MainDude"]
-position = Vector2(59, -49)
+position = Vector2(62, -47)
 zoom = Vector2(4, 4)
 
 [node name="enemy" parent="." instance=ExtResource("3_lnu2h")]
 z_index = 5
-position = Vector2(-138, -13)
+position = Vector2(144, 6)
 
 [node name="Bandage" parent="." instance=ExtResource("4_lbhrr")]
 z_index = 4

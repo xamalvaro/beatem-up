@@ -6,18 +6,18 @@
 [ext_resource type="Script" uid="uid://dt5j6mpvak21a" path="res://scripts/States/idle_state.gd" id="4_vk2w2"]
 [ext_resource type="Script" uid="uid://c3ehcg6mord4t" path="res://scripts/States/run_state.gd" id="5_cstp5"]
 [ext_resource type="Script" uid="uid://rqx1guppwde8" path="res://scripts/States/jump_state.gd" id="6_w0us6"]
-[ext_resource type="Script" path="res://scripts/States/stomp_state.gd" id="7_ch0gb"]
-[ext_resource type="Script" path="res://scripts/States/stomp2_state.gd" id="8_4ud2p"]
-[ext_resource type="Script" path="res://scripts/States/stomp3_state.gd" id="9_yvq3c"]
-[ext_resource type="Script" path="res://scripts/States/sweep_state.gd" id="10_i5gdq"]
-[ext_resource type="Script" path="res://scripts/States/drop_kick_state.gd" id="11_s1h8e"]
+[ext_resource type="Script" uid="uid://dvumudi88i370" path="res://scripts/States/stomp_state.gd" id="7_ch0gb"]
+[ext_resource type="Script" uid="uid://b10o5te4smxrs" path="res://scripts/States/stomp2_state.gd" id="8_4ud2p"]
+[ext_resource type="Script" uid="uid://dbqh8ki343q8y" path="res://scripts/States/stomp3_state.gd" id="9_yvq3c"]
+[ext_resource type="Script" uid="uid://buhkffl7f6yip" path="res://scripts/States/sweep_state.gd" id="10_i5gdq"]
+[ext_resource type="Script" uid="uid://cvuntupvrexge" path="res://scripts/States/drop_kick_state.gd" id="11_s1h8e"]
 [ext_resource type="Script" uid="uid://pr6b5br7fhyf" path="res://scripts/States/crouch_state.gd" id="12_4wouk"]
 [ext_resource type="Script" uid="uid://h36w06pmavih" path="res://scripts/States/crouch_walk_state.gd" id="13_fhthk"]
-[ext_resource type="Script" path="res://scripts/States/crawl_idle_state.gd" id="14_6itht"]
+[ext_resource type="Script" uid="uid://b20pw8prwvo5k" path="res://scripts/States/crawl_idle_state.gd" id="14_6itht"]
 [ext_resource type="Script" uid="uid://cp6wi2s8lxedb" path="res://scripts/States/pushup_state.gd" id="15_eb7yp"]
-[ext_resource type="Script" path="res://scripts/States/crawlsweep_state.gd" id="16_4ud2p"]
-[ext_resource type="Script" path="res://scripts/States/crawl_enter_state.gd" id="16_i5gdq"]
-[ext_resource type="Script" path="res://scripts/States/crawl_move_state.gd" id="18_s1h8e"]
+[ext_resource type="Script" uid="uid://cae8dx2qemy8" path="res://scripts/States/crawlsweep_state.gd" id="16_4ud2p"]
+[ext_resource type="Script" uid="uid://cytcqxd24ajp0" path="res://scripts/States/crawl_enter_state.gd" id="16_i5gdq"]
+[ext_resource type="Script" uid="uid://h017w27hm8ms" path="res://scripts/States/crawl_move_state.gd" id="18_s1h8e"]
 [ext_resource type="Script" uid="uid://pff8tvsjfbp3" path="res://scripts/inventory/inventory.gd" id="19_s1h8e"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_y12ej"]
@@ -482,8 +482,8 @@ animations = [{
 "speed": 10.0
 }]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_lkuin"]
-radius = 3.0
+[sub_resource type="CircleShape2D" id="CircleShape2D_s1h8e"]
+radius = 8.0
 
 [node name="MainDude" type="CharacterBody2D" groups=["player"]]
 collision_layer = 3
@@ -496,7 +496,7 @@ autoplay = "idle"
 frame_progress = 0.19213422
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CapsuleShape2D_lkuin")
+shape = SubResource("CircleShape2D_s1h8e")
 
 [node name="State_machine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
 script = ExtResource("3_n3ej1")
