@@ -3,7 +3,8 @@ class_name ItemData
 
 @export var item_name: String = "Item"
 @export var description: String = "A basic item"
-@export var icon: Texture2D
+@export var icon: Texture2D         # Static first-frame AtlasTexture — used in inventory UI
+@export var sprite_sheet: Texture2D # Full sprite sheet PNG — used for animated world pickup
 @export var item_type: String = "consumable"  # "consumable", "weapon", "throwable"
 @export var stack_size: int = 1
 @export var can_equip: bool = false

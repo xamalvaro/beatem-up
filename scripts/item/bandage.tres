@@ -1,16 +1,18 @@
-[gd_resource type="Resource" script_class="ItemData" load_steps=3 format=3 uid="uid://dnch1yarfcv30"]
+[gd_resource type="Resource" script_class="ItemData" load_steps=4 format=3 uid="uid://dnch1yarfcv30"]
 
 [ext_resource type="Script" uid="uid://l4oxgp0u6rct" path="res://scripts/inventory/item.gd" id="1_8umpu"]
-[ext_resource type="Texture2D" uid="uid://po2rc665uie6" path="res://icon.svg" id="1_nuijp"]
+[ext_resource type="Texture2D" uid="uid://c21b245fwy7dm" path="res://assets/item animations/Bandage.png" id="1_nuijp"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5c601"]
+atlas = ExtResource("1_nuijp")
+region = Rect2(9, 7, 17.227905, 12.485859)
 
 [resource]
 script = ExtResource("1_8umpu")
 item_name = "Bandage"
 description = "Heals 20 dmg"
-icon = ExtResource("1_nuijp")
-item_type = null
+icon = SubResource("AtlasTexture_5c601")
+sprite_sheet = ExtResource("1_nuijp")
 stack_size = 5
-can_equip = null
-throw_damage = null
 use_effect = "heal_20"
 metadata/_custom_type_script = "uid://l4oxgp0u6rct"

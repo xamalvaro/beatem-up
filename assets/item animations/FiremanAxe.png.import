@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bp18hmxf7yssu"
-path="res://.godot/imported/Energy Drink.png-2e249ea88aec6e4b2b3a87ac55d585cb.ctex"
+uid="uid://cugnxpicxc3y1"
+path="res://.godot/imported/FiremanAxe.png-de355414f60330cb54a8849334a41b5c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/item animations/Energy Drink.png"
-dest_files=["res://.godot/imported/Energy Drink.png-2e249ea88aec6e4b2b3a87ac55d585cb.ctex"]
+source_file="res://assets/item animations/FiremanAxe.png"
+dest_files=["res://.godot/imported/FiremanAxe.png-de355414f60330cb54a8849334a41b5c.ctex"]
 
 [params]
 

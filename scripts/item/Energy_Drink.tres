@@ -1,15 +1,18 @@
-[gd_resource type="Resource" script_class="ItemData" load_steps=3 format=3 uid="uid://c8i4prqmrw3a1"]
+[gd_resource type="Resource" script_class="ItemData" load_steps=4 format=3 uid="uid://c8i4prqmrw3a1"]
 
 [ext_resource type="Script" uid="uid://l4oxgp0u6rct" path="res://scripts/inventory/item.gd" id="1_ak2dj"]
-[ext_resource type="Texture2D" uid="uid://po2rc665uie6" path="res://icon.svg" id="1_tru5s"]
+[ext_resource type="Texture2D" uid="uid://docxugvdkvk5d" path="res://assets/item animations/EnergyDrink.png" id="1_tru5s"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x7f5l"]
+atlas = ExtResource("1_tru5s")
+region = Rect2(10, 2, 12.092949, 23.7971)
 
 [resource]
 script = ExtResource("1_ak2dj")
 item_name = "EnergyDrink"
 description = "Boosts speed by 50% for 5 seconds"
-icon = ExtResource("1_tru5s")
+icon = SubResource("AtlasTexture_x7f5l")
+sprite_sheet = ExtResource("1_tru5s")
 stack_size = 3
-can_equip = null
-throw_damage = null
 use_effect = "boost_speed"
 metadata/_custom_type_script = "uid://l4oxgp0u6rct"
