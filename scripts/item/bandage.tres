@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="ItemData" load_steps=4 format=3 uid="uid://dnch1yarfcv30"]
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://dnch1yarfcv30"]
 
 [ext_resource type="Script" uid="uid://l4oxgp0u6rct" path="res://scripts/inventory/item.gd" id="1_8umpu"]
 [ext_resource type="Texture2D" uid="uid://c21b245fwy7dm" path="res://assets/item animations/Bandage.png" id="1_nuijp"]

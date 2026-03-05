@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://dr0hq5otnr3ax"]
+[gd_scene format=3 uid="uid://dr0hq5otnr3ax"]
 
 [ext_resource type="Script" uid="uid://bh7iggiyjkiqx" path="res://scripts/inventory/pickup_item.gd" id="1_oupvd"]
 
@@ -7,13 +7,13 @@ radius = 6.0827627
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_oupvd"]
 
-[node name="Pickup_item" type="Area2D"]
+[node name="Pickup_item" type="Area2D" unique_id=1028245121]
 script = ExtResource("1_oupvd")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=430690067]
 position = Vector2(0, -1)
 shape = SubResource("CircleShape2D_en1ry")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=2020287294]
 position = Vector2(0, -1)
 sprite_frames = SubResource("SpriteFrames_oupvd")
