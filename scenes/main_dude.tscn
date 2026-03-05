@@ -1,4 +1,4 @@
-[gd_scene load_steps=79 format=3 uid="uid://exq70yhws4mk"]
+[gd_scene format=3 uid="uid://exq70yhws4mk"]
 
 [ext_resource type="Script" uid="uid://doiw5774umhol" path="res://scripts/main_dude.gd" id="1_imk3f"]
 [ext_resource type="Texture2D" uid="uid://cdst75kjukgw5" path="res://assets/Don's sprite animation/Player_Concept.png" id="2_n3ej1"]
@@ -485,67 +485,67 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_s1h8e"]
 radius = 8.0
 
-[node name="MainDude" type="CharacterBody2D" groups=["player"]]
+[node name="MainDude" type="CharacterBody2D" unique_id=572648291 groups=["player"]]
 collision_layer = 3
 script = ExtResource("1_imk3f")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1366864291]
 sprite_frames = SubResource("SpriteFrames_w0us6")
 animation = &"crawl_move"
 autoplay = "idle"
 frame_progress = 0.19213422
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=19705840]
 shape = SubResource("CircleShape2D_s1h8e")
 
-[node name="State_machine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
+[node name="State_machine" type="Node" parent="." unique_id=522430808 node_paths=PackedStringArray("initial_state")]
 script = ExtResource("3_n3ej1")
 initial_state = NodePath("Idle")
 
-[node name="Idle" type="Node" parent="State_machine"]
+[node name="Idle" type="Node" parent="State_machine" unique_id=527602790]
 script = ExtResource("4_vk2w2")
 
-[node name="Run" type="Node" parent="State_machine"]
+[node name="Run" type="Node" parent="State_machine" unique_id=579819519]
 script = ExtResource("5_cstp5")
 
-[node name="Jump" type="Node" parent="State_machine"]
+[node name="Jump" type="Node" parent="State_machine" unique_id=2143406094]
 script = ExtResource("6_w0us6")
 
-[node name="Crouch" type="Node" parent="State_machine"]
+[node name="Crouch" type="Node" parent="State_machine" unique_id=862165100]
 script = ExtResource("12_4wouk")
 
-[node name="CrouchWalk" type="Node" parent="State_machine"]
+[node name="CrouchWalk" type="Node" parent="State_machine" unique_id=1861375086]
 script = ExtResource("13_fhthk")
 
-[node name="Pushup" type="Node" parent="State_machine"]
+[node name="Pushup" type="Node" parent="State_machine" unique_id=1074128510]
 script = ExtResource("15_eb7yp")
 
-[node name="CrawlMove" type="Node" parent="State_machine"]
+[node name="CrawlMove" type="Node" parent="State_machine" unique_id=615467892]
 script = ExtResource("18_s1h8e")
 
-[node name="CrawlIdle" type="Node" parent="State_machine"]
+[node name="CrawlIdle" type="Node" parent="State_machine" unique_id=753261245]
 script = ExtResource("14_6itht")
 
-[node name="CrawlEnter" type="Node" parent="State_machine"]
+[node name="CrawlEnter" type="Node" parent="State_machine" unique_id=858170688]
 script = ExtResource("16_i5gdq")
 
-[node name="Stomp3" type="Node" parent="State_machine"]
+[node name="Stomp3" type="Node" parent="State_machine" unique_id=1562525783]
 script = ExtResource("9_yvq3c")
 
-[node name="Stomp" type="Node" parent="State_machine"]
+[node name="Stomp" type="Node" parent="State_machine" unique_id=654176875]
 script = ExtResource("7_ch0gb")
 
-[node name="Stomp2" type="Node" parent="State_machine"]
+[node name="Stomp2" type="Node" parent="State_machine" unique_id=546933480]
 script = ExtResource("8_4ud2p")
 
-[node name="DropKick" type="Node" parent="State_machine"]
+[node name="DropKick" type="Node" parent="State_machine" unique_id=1377995427]
 script = ExtResource("11_s1h8e")
 
-[node name="Sweep" type="Node" parent="State_machine"]
+[node name="Sweep" type="Node" parent="State_machine" unique_id=1185651877]
 script = ExtResource("10_i5gdq")
 
-[node name="CrawlSweep" type="Node" parent="State_machine"]
+[node name="CrawlSweep" type="Node" parent="State_machine" unique_id=1146448659]
 script = ExtResource("16_4ud2p")
 
-[node name="Inventory" type="Node" parent="."]
+[node name="Inventory" type="Node" parent="." unique_id=1993882174]
 script = ExtResource("19_s1h8e")

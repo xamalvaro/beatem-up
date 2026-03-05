@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=4 uid="uid://dnyyok8yp7twl"]
+[gd_scene format=4 uid="uid://dnyyok8yp7twl"]
 
 [ext_resource type="Texture2D" uid="uid://b77e7jugveswp" path="res://assets/CITY_TILES/CITY-TILES-.png" id="1_uwrxv"]
 [ext_resource type="PackedScene" uid="uid://exq70yhws4mk" path="res://scenes/main_dude.tscn" id="2_yqjtg"]
@@ -695,52 +695,52 @@ physics_layer_0/collision_layer = 4
 physics_layer_0/collision_mask = 4
 sources/0 = SubResource("TileSetAtlasSource_lbhrr")
 
-[node name="Game" type="Node2D"]
+[node name="Game" type="Node2D" unique_id=402627030]
 
-[node name="MainGround" type="TileMapLayer" parent="."]
+[node name="MainGround" type="TileMapLayer" parent="." unique_id=1904905416]
 position = Vector2(-179, 0)
 tile_map_data = PackedByteArray("AAAJAAEAAQABAAUAAAAKAAEAAQABAAUAAAALAAEAAQABAAUAAAAMAAEAAQABAAUAAAANAAEAAQABAAUAAAAOAAEAAQABAAUAAAAPAAEAAQABAAUAAAAQAAEAAQABAAUAAAARAAEAAQABAAUAAAASAAEAAQABAAUAAAATAAEAAQABAAUAAAAUAAEAAQABAAUAAAAVAAEAAQABAAUAAAAWAAEAAQABAAUAAAAXAAEAAQABAAUAAAAIAP7/AQAAAAIAAAAIAP//AQAAAAMAAAAIAAAAAQAAAAQAAAAIAAEAAQAAAAUAAAAYAP7/AQAIAAIAAAAYAP//AQAIAAMAAAAYAAAAAQAIAAQAAAAYAAEAAQAIAAUAAAA=")
 tile_set = SubResource("TileSet_lnu2h")
 
-[node name="MidGround" type="TileMapLayer" parent="."]
+[node name="MidGround" type="TileMapLayer" parent="." unique_id=733356376]
 z_index = 2
 position = Vector2(-176, 0)
 tile_map_data = PackedByteArray("AAAKAP3/AAAJAAMAAAAKAP7/AAAJAAQAAAAKAP//AAAJAAUAAAALAP3/AAAKAAMAAAALAP7/AAAKAAQAAAALAP//AAAKAAUAAAAMAP3/AAALAAMAAAAMAP7/AAALAAQAAAAMAP//AAALAAUAAAAOAPn/AAAJAAEAAAAOAPr/AAAJAAIAAAAPAPn/AAAKAAEAAAAPAPr/AAAKAAIAAAAQAP3/AAALAAIAAAATAP7/AAAJAAAAAAASAP7/AAAKAAAAAAAUAP7/AAAKAAAAAAAVAPr/AAALAAAAAAAVAPv/AAALAAEAAAAWAPr/AAALAAAAAAAWAPv/AAALAAEAAAA=")
 tile_set = SubResource("TileSet_yqjtg")
 
-[node name="BackGround" type="TileMapLayer" parent="."]
+[node name="BackGround" type="TileMapLayer" parent="." unique_id=1759231208]
 z_index = 1
 position = Vector2(125, 0)
 tile_map_data = PackedByteArray("AAD5//3/AAABAAYAAAD5//7/AAAHAAIAAAD5////AAAHAAMAAAD6//3/AAABAAYAAAD6//7/AAAHAAIAAAD6////AAAHAAMAAAD7//3/AAAAAAcAAAD7//7/AAAHAAIAAAD7////AAAHAAMAAAD9//3/AAABAAcAAAD///7/AAAHAAIAAAAAAP7/AAAHAAIAAAABAP7/AAAHAAIAAAABAPr/AAAKAAsAAAABAPv/AAAKAAwAAAD7//n/AAAJAAcAAAD7//r/AAAAAAAAAAD8//n/AAAKAAcAAAD8//r/AAACAAAAAAD3//7/AAAHAAIAAAD3////AAAHAAMAAAD3/wAAAAAHAAQAAAD3/wEAAAAHAAUAAAD2//7/AAAHAAIAAAD2////AAAHAAMAAAD2/wAAAAAHAAQAAAD2/wEAAAAHAAUAAAD4//7/AAAHAAIAAAD4////AAAHAAMAAAD4/wAAAAAHAAQAAAD4/wEAAAAHAAUAAAD5/wAAAAAHAAQAAAD5/wEAAAAHAAUAAAD6/wAAAAAHAAQAAAD6/wEAAAAHAAUAAAD7/wAAAAAHAAQAAAD7/wEAAAAHAAUAAAD8//7/AAABAAIAAAD8////AAABAAMAAAD8/wAAAAABAAQAAAD9//7/AAACAAIAAAD9////AAACAAMAAAD9/wAAAAACAAQAAAD8/wEAAAABAAUAAAD9/wEAAAACAAUAAAD+//7/AAAHAAIAAAD+////AAAHAAMAAAD+/wAAAAAHAAQAAAD+/wEAAAAHAAUAAAAAAP//AAAHAAMAAAAAAAAAAAAHAAQAAAAAAAEAAAAHAAUAAAD/////AAAHAAMAAAD//wAAAAAHAAQAAAD//wEAAAAHAAUAAAABAP//AAAHAAMAAAABAAAAAAAHAAQAAAABAAEAAAAHAAUAAAACAP7/AAAHAAIAAAACAP//AAAHAAMAAAACAAAAAAAHAAQAAAACAAEAAAAHAAUAAAADAP7/AAAHAAIAAAADAP//AAAHAAMAAAADAAAAAAAHAAQAAAADAAEAAAAHAAUAAAAEAP7/AAAHAAIAAAAEAP//AAAHAAMAAAAEAAAAAAAHAAQAAAAEAAEAAAAHAAUAAAD2//3/AAABAAYAAAD3//3/AAABAAYAAAD4//3/AAABAAYAAAD7//z/AAAAAAYAAAD7//v/AAAAAAEAAAD8//v/AAACAAEAAAD8//z/AAACAAcAAAD8//3/AAABAAcAAAD9//z/AAABAAYAAAD+//z/AAABAAYAAAD///z/AAABAAYAAAD+//3/AAABAAcAAAD///3/AAABAAcAAAAAAP3/AAABAAcAAAAAAPz/AAABAAYAAAABAPz/AAABAAYAAAACAPz/AAABAAYAAAADAPz/AAABAAYAAAAEAPz/AAABAAYAAAAEAP3/AAABAAcAAAADAP3/AAABAAcAAAACAP3/AAABAAcAAAABAP3/AAABAAcAAAD5//v/AAAHAAsAAAD5//z/AAAHAAwAAAD6//v/AAAIAAsAAAD6//z/AAAIAAwAAAD4//r/AAAHAAsAAAD5//r/AAAHAAsAAAD6//r/AAAIAAsAAAD2//r/AAAGAAsAAAD3//r/AAAHAAsAAAD2//z/AAAGAAwAAAD3//z/AAAHAAwAAAD4//z/AAAHAAwAAAD2//v/AAAGAAsAAAD5//n/AAAHAAoAAAD6//n/AAAIAAoAAAD5//j/AAAHAAkAAAD6//j/AAAIAAkAAAD4//j/AAAHAAkAAAD3//j/AAAHAAkAAAD2//j/AAAHAAkAAAD3//n/AAAHAAoAAAD4//n/AAAHAAoAAAD2//n/AAAHAAoAAAD7//j/AAAJAAYAAAD8//j/AAAKAAYAAAD9//j/AAAJAAoAAAD9//n/AAAJAAsAAAD9//r/AAAJAAsAAAD9//v/AAAJAAwAAAD+//n/AAAKAAsAAAD///n/AAAKAAsAAAAAAPn/AAAKAAsAAAABAPn/AAAKAAsAAAACAPn/AAAKAAsAAAACAPr/AAAKAAsAAAACAPv/AAAKAAwAAAAAAPr/AAALAAgAAAAAAPv/AAAKAAwAAAD///v/AAAKAAwAAAD+//v/AAAKAAwAAAD+//r/AAAJAAgAAAD///r/AAAKAAgAAAD+//j/AAAKAAoAAAD///j/AAAKAAoAAAAAAPj/AAAKAAoAAAABAPj/AAAKAAoAAAACAPj/AAAKAAoAAAD3//v/AAAGAAgAAAD4//v/AAAIAAgAAAAFAP3/AAABAAcAAAAEAPr/AAAKAAsAAAAEAPv/AAAKAAwAAAAFAPr/AAALAAsAAAAFAPv/AAALAAwAAAADAPr/AAAKAAsAAAADAPv/AAAKAAwAAAADAPn/AAAKAAsAAAAEAPn/AAAKAAsAAAAFAPn/AAALAAsAAAADAPj/AAAKAAoAAAAEAPj/AAAKAAoAAAAFAPj/AAALAAoAAAAFAPz/AAABAAYAAAA=")
 tile_set = SubResource("TileSet_iywne")
 
-[node name="MainDude" parent="." instance=ExtResource("2_yqjtg")]
+[node name="MainDude" parent="." unique_id=1671718805 instance=ExtResource("2_yqjtg")]
 z_index = 5
 position = Vector2(-26, -1)
 
-[node name="Camera2D" type="Camera2D" parent="MainDude"]
+[node name="Camera2D" type="Camera2D" parent="MainDude" unique_id=603069504]
 position = Vector2(62, -47)
 zoom = Vector2(4, 4)
 
-[node name="enemy" parent="." instance=ExtResource("3_lnu2h")]
+[node name="enemy" parent="." unique_id=1256046638 instance=ExtResource("3_lnu2h")]
 z_index = 5
 position = Vector2(144, 6)
 
-[node name="Bandage" parent="." instance=ExtResource("4_lbhrr")]
+[node name="Bandage" parent="." unique_id=247684318 instance=ExtResource("4_lbhrr")]
 z_index = 4
 position = Vector2(36, 8)
 item_data = ExtResource("5_iywne")
 
-[node name="Fireman Axe" parent="." instance=ExtResource("4_lbhrr")]
-z_index = 5
+[node name="Fireman Axe" parent="." unique_id=1080552224 instance=ExtResource("4_lbhrr")]
+z_index = 4
 position = Vector2(20, 8)
 item_data = ExtResource("6_0tnpc")
 
-[node name="Energy Drink" parent="." instance=ExtResource("4_lbhrr")]
-z_index = 5
+[node name="Energy Drink" parent="." unique_id=259836407 instance=ExtResource("4_lbhrr")]
+z_index = 4
 position = Vector2(51, 8)
 item_data = ExtResource("7_0tnpc")
 
-[node name="HealthBar" parent="." instance=ExtResource("8_0tnpc")]
+[node name="HealthBar" parent="." unique_id=2105017085 instance=ExtResource("8_0tnpc")]
 
-[node name="InventoryUI" parent="." instance=ExtResource("8_vtaks")]
+[node name="InventoryUI" parent="." unique_id=1620204213 instance=ExtResource("8_vtaks")]

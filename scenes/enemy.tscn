@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=3 uid="uid://ceu1slwff0p16"]
+[gd_scene format=3 uid="uid://ceu1slwff0p16"]
 
 [ext_resource type="Script" uid="uid://p13it6nx4bc6" path="res://scripts/enemy.gd" id="1_md0e3"]
 [ext_resource type="Texture2D" uid="uid://drgi3jrlcp62x" path="res://assets/Don's sprite animation/zombie1_1.png" id="2_md0e3"]
@@ -247,25 +247,25 @@ radius = 45.099888
 [sub_resource type="CircleShape2D" id="CircleShape2D_md0e3"]
 radius = 8.0
 
-[node name="enemy" type="CharacterBody2D"]
+[node name="enemy" type="CharacterBody2D" unique_id=1596314262]
 script = ExtResource("1_md0e3")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=406843052]
 position = Vector2(0, -12)
 sprite_frames = SubResource("SpriteFrames_j0cyh")
-animation = &"walk"
+animation = &"death"
 autoplay = "idle"
-frame_progress = 0.41996267
+frame_progress = 0.28788704
 
-[node name="detection_area" type="Area2D" parent="."]
+[node name="detection_area" type="Area2D" parent="." unique_id=2103427429]
 collision_layer = 2
 collision_mask = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="detection_area"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="detection_area" unique_id=902721315]
 position = Vector2(0, -6)
 shape = SubResource("CircleShape2D_g0wcc")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=149632341]
 position = Vector2(0, -10)
 shape = SubResource("CircleShape2D_md0e3")
 
