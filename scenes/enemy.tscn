@@ -253,9 +253,9 @@ script = ExtResource("1_md0e3")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -12)
 sprite_frames = SubResource("SpriteFrames_j0cyh")
-animation = &"walk"
+animation = &"death"
 autoplay = "idle"
-frame_progress = 0.41996267
+frame_progress = 0.28788704
 
 [node name="detection_area" type="Area2D" parent="."]
 collision_layer = 2
