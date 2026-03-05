@@ -19,6 +19,7 @@
 [ext_resource type="Script" uid="uid://cytcqxd24ajp0" path="res://scripts/States/crawl_enter_state.gd" id="16_i5gdq"]
 [ext_resource type="Script" uid="uid://h017w27hm8ms" path="res://scripts/States/crawl_move_state.gd" id="18_s1h8e"]
 [ext_resource type="Script" uid="uid://pff8tvsjfbp3" path="res://scripts/inventory/inventory.gd" id="19_s1h8e"]
+[ext_resource type="Script" uid="uid://3tufg30dcaas" path="res://scripts/punch_hitbox.gd" id="20_4wouk"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_y12ej"]
 atlas = ExtResource("2_n3ej1")
@@ -485,15 +486,17 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_s1h8e"]
 radius = 8.0
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fhthk"]
+size = Vector2(12, 16)
+
 [node name="MainDude" type="CharacterBody2D" unique_id=572648291 groups=["player"]]
 collision_layer = 3
 script = ExtResource("1_imk3f")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1366864291]
 sprite_frames = SubResource("SpriteFrames_w0us6")
-animation = &"crawl_move"
+animation = &"stomp"
 autoplay = "idle"
-frame_progress = 0.19213422
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=19705840]
 shape = SubResource("CircleShape2D_s1h8e")
@@ -549,3 +552,12 @@ script = ExtResource("16_4ud2p")
 
 [node name="Inventory" type="Node" parent="." unique_id=1993882174]
 script = ExtResource("19_s1h8e")
+
+[node name="PunchHitBox" type="Area2D" parent="." unique_id=1887402298]
+collision_layer = 32
+collision_mask = 2
+script = ExtResource("20_4wouk")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PunchHitBox" unique_id=1259109213]
+position = Vector2(10, 0)
+shape = SubResource("RectangleShape2D_fhthk")
