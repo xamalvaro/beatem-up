@@ -1,51 +1,30 @@
-extends State
+extends AttackState
 
-var attack_timer: float = 0.0
-var attack_duration: float = 0.5  # Adjust based on your animation length
-var attack_finished: bool = false
-var combo_timer: float = 0.0
-var combo_window: float = 0.4
+func _ready() -> void:
+	attack_damage = 1
+	attack_duration = 0.5
+	attack_animation = "sweep"
+	can_move_during_attack = false
+	combo_window = 0.4
+	next_attack_a = "stomp"
+	next_attack_b = ""
+	directional_attacks = {}
 
 func enter() -> void:
-	attack_timer = 0.0
-	attack_finished = false
-	combo_timer = 0.0
-	player.velocity.x = 0
-	player.get_node("AnimatedSprite2D").play("sweep")
+	super.enter()
+	# Reposition hitbox low and wide for a sweep kick
+	var shape = player.get_node_or_null("PunchHitBox/CollisionShape2D")
+	if shape:
+		shape.position.y = 4  # Lower than a punch — near ground level
 	print(">>> Entered SWEEP state")
 
 func exit() -> void:
+	super.exit()
+	# Reset hitbox y position back to default punch height
+	var shape = player.get_node_or_null("PunchHitBox/CollisionShape2D")
+	if shape:
+		shape.position.y = 0
 	print(">>> Exited SWEEP state")
 
 func physics_update(delta: float) -> void:
-	attack_timer += delta
-	
-	# Apply gravity
-	if not player.is_on_floor():
-		player.velocity.y += player.get_gravity().y * delta
-	
-	# Keep player stationary
-	player.velocity.x = 0
-	
-	# Wait for attack to finish
-	if not attack_finished and attack_timer >= attack_duration:
-		attack_finished = true
-		print(">>> SWEEP attack finished - combo window open")
-	
-	# After attack finishes, check for combo or return to idle
-	if attack_finished:
-		combo_timer += delta
-		
-		if combo_timer < combo_window:
-			# Check for combo into stomp
-			if Input.is_action_just_pressed("attack_a"):
-				print(">>> SWEEP: Combo into stomp")
-				transitioned.emit("stomp")
-				return
-		else:
-			# Combo window expired, return to idle
-			print(">>> SWEEP: Combo window expired, returning to idle")
-			transitioned.emit("idle")
-			return
-	
-	player.move_and_slide()
+	super.physics_update(delta)

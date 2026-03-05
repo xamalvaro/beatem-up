@@ -75,6 +75,11 @@ func _physics_process(delta: float) -> void:
 		velocity.x = move_toward(velocity.x, 0, speed)
 		sprite.play("idle")
 
+	# Keep AttackHitBox shape facing the same direction as the zombie
+	var attack_shape = attack_hitbox.get_node_or_null("CollisionShape2D")
+	if attack_shape:
+		attack_shape.position.x = abs(attack_shape.position.x) * (-1 if sprite.flip_h else 1)
+
 	move_and_slide()
 
 func start_lunge() -> void:

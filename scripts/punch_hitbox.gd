@@ -1,12 +1,14 @@
 extends Area2D
 
-# This script lives on the PunchHitBox node under the player.
-# attack_state.gd enables/disables it and sets the "damage" meta value.
-# Collision layer 32 — detected by enemies on mask 32.
+# Sits on PunchHitBox (Area2D) under the player.
+# attack_state.gd enables/disables it and sets the "damage" meta.
+#
+# collision_mask = 1  →  hits the zombie CharacterBody2D (layer 1)
+# Only disables itself after hitting a confirmed enemy — not the floor or walls.
 
 func _ready() -> void:
-	collision_layer = 32  # Player punch hitbox layer
-	collision_mask = 2    # Detects enemy bodies (layer 2)
+	collision_layer = 32
+	collision_mask = 1
 	monitoring = false
 	get_node("CollisionShape2D").disabled = true
 	body_entered.connect(_on_body_entered)
@@ -16,6 +18,8 @@ func _on_body_entered(body: Node2D) -> void:
 		var damage = get_meta("damage", 1)
 		body.take_damage(damage)
 		print(">>> Punch hit: " + body.name + " for " + str(damage) + " damage")
-		# Disable after first hit so one swing can't hit same enemy twice
-		monitoring = false
-		get_node("CollisionShape2D").disabled = true
+		# Only disable after a confirmed enemy hit
+		set_deferred("monitoring", false)
+		get_node("CollisionShape2D").set_deferred("disabled", true)
+	else:
+		print(">>> Hitbox touched non-enemy: " + body.name + " (ignored)")

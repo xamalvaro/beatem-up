@@ -50,9 +50,13 @@ func _disable_hitbox() -> void:
 		hitbox.get_node("CollisionShape2D").set_deferred("disabled", true)
 
 func _update_hitbox_direction(hitbox: Node) -> void:
-	# Place hitbox in front of the player based on facing direction
-	var sprite = player.get_node("AnimatedSprite2D")
-	hitbox.position.x = abs(hitbox.position.x) * (-1 if sprite.flip_h else 1)
+	# Move the CollisionShape2D child, not the Area2D parent.
+	# Moving the Area2D position was unreliable because its local origin
+	# is already at the player's center. Moving the shape directly is correct.
+	var shape = hitbox.get_node_or_null("CollisionShape2D")
+	if shape:
+		var sprite = player.get_node("AnimatedSprite2D")
+		shape.position.x = abs(shape.position.x) * (-1 if sprite.flip_h else 1)
 
 func _get_attack_damage() -> int:
 	var inventory = player.get_node_or_null("Inventory")
