@@ -43,11 +43,11 @@ func _ready() -> void:
 		if inventory:
 			inventory.inventory_changed.connect(refresh_inventory)
 			setup_slots()
-			print(">>> Inventory UI connected to player inventory")
+			DebugLog.log(">>> Inventory UI connected to player inventory")
 		else:
-			print(">>> ERROR: Could not find Inventory node on player")
+			DebugLog.log(">>> ERROR: Could not find Inventory node on player")
 	else:
-		print(">>> ERROR: Could not find player in scene")
+		DebugLog.log(">>> ERROR: Could not find player in scene")
 	
 	update_button_states()
 
@@ -69,10 +69,10 @@ func toggle_inventory() -> void:
 	visible = is_open
 	
 	if is_open:
-		print(">>> Inventory OPENED")
+		DebugLog.log(">>> Inventory OPENED")
 		refresh_inventory()  # Refresh when opening
 	else:
-		print(">>> Inventory CLOSED")
+		DebugLog.log(">>> Inventory CLOSED")
 		selected_slot = -1
 		# Reset slot highlights
 		for slot in slots:
@@ -80,7 +80,7 @@ func toggle_inventory() -> void:
 
 func setup_slots() -> void:
 	if not inventory:
-		print(">>> ERROR: No inventory in setup_slots!")
+		DebugLog.log(">>> ERROR: No inventory in setup_slots!")
 		return
 	
 	# Clear existing slots
@@ -88,7 +88,7 @@ func setup_slots() -> void:
 		slot.queue_free()
 	slots.clear()
 	
-	print(">>> Creating " + str(inventory.max_slots) + " slots...")
+	DebugLog.log(">>> Creating " + str(inventory.max_slots) + " slots...")
 	
 	# Create slot UI elements
 	for i in range(inventory.max_slots):
@@ -104,12 +104,12 @@ func setup_slots() -> void:
 		
 		# DEBUG
 		if item != null:
-			print("  Slot " + str(i) + " has item: " + item.item_name)
+			DebugLog.log("  Slot " + str(i) + " has item: " + item.item_name)
 		
 		slot.set_slot_data(i, item, qty)
 	
-	print(">>> Created " + str(slots.size()) + " inventory slots")
-	print(">>> Grid has " + str(slots_grid.get_child_count()) + " children")
+	DebugLog.log(">>> Created " + str(slots.size()) + " inventory slots")
+	DebugLog.log(">>> Grid has " + str(slots_grid.get_child_count()) + " children")
 
 func refresh_inventory() -> void:
 	if not inventory:
@@ -125,7 +125,7 @@ func refresh_inventory() -> void:
 
 func _on_slot_clicked(slot_index: int) -> void:
 	selected_slot = slot_index
-	print(">>> Selected slot: " + str(slot_index))
+	DebugLog.log(">>> Selected slot: " + str(slot_index))
 	
 	# Highlight selected slot (optional visual feedback)
 	for i in range(slots.size()):
@@ -184,14 +184,14 @@ func spawn_dropped_item(item: ItemData) -> void:
 	
 	# Position it near the player
 	var drop_offset = Vector2(20, 0)  # Drop 20 pixels to the right
-	if player.get_node("AnimatedSprite2D").flip_h:
+	if player.sprite.flip_h:
 		drop_offset.x = -20  # Drop to the left if facing left
 	
 	pickup.position = player.position + drop_offset
 	
 	# Add to the scene
 	get_tree().root.add_child(pickup)
-	print(">>> Dropped item: " + item.item_name)
+	DebugLog.log(">>> Dropped item: " + item.item_name)
 
 func _on_throw_pressed() -> void:
 	if selected_slot >= 0 and inventory:
@@ -203,17 +203,17 @@ func _on_throw_pressed() -> void:
 func spawn_thrown_item(item: ItemData) -> void:
 	var player = get_tree().get_first_node_in_group("player")
 	if not player:
-		print(">>> ERROR: Cannot throw - no player found")
+		DebugLog.log(">>> ERROR: Cannot throw - no player found")
 		return
 	
 	if not item.icon:
-		print(">>> ERROR: Item has no icon to throw")
+		DebugLog.log(">>> ERROR: Item has no icon to throw")
 		return
 	
 	# Load the thrown item scene
 	var thrown_scene = load("res://scenes/thrown_item.tscn")
 	if not thrown_scene:
-		print(">>> ERROR: Could not load thrown_item.tscn")
+		DebugLog.log(">>> ERROR: Could not load thrown_item.tscn")
 		return
 	
 	var thrown = thrown_scene.instantiate()
@@ -221,7 +221,7 @@ func spawn_thrown_item(item: ItemData) -> void:
 	# Calculate throw direction based on player facing
 	var throw_direction = Vector2.RIGHT
 	if player.has_node("AnimatedSprite2D"):
-		if player.get_node("AnimatedSprite2D").flip_h:
+		if player.sprite.flip_h:
 			throw_direction = Vector2.LEFT
 	
 	var throw_velocity = throw_direction * 300  # Horizontal speed
@@ -236,7 +236,7 @@ func spawn_thrown_item(item: ItemData) -> void:
 	# Add to scene root
 	get_tree().root.add_child(thrown)
 	
-	print(">>> Threw: " + item.item_name + " with " + str(item.throw_damage) + " damage")
+	DebugLog.log(">>> Threw: " + item.item_name + " with " + str(item.throw_damage) + " damage")
 
 func update_button_states() -> void:
 	if selected_slot < 0 or not inventory:
@@ -261,20 +261,15 @@ func update_button_states() -> void:
 	drop_button.disabled = false
 	throw_button.disabled = (item.throw_damage <= 0)
 
-func _process(_delta: float) -> void:
-	# Debug: Press P to print inventory contents
-	if Input.is_action_just_pressed("ui_cancel"):  # ESC key for testing
-		debug_print_inventory()
-
 func debug_print_inventory() -> void:
 	if not inventory:
-		print(">>> DEBUG: No inventory reference!")
+		DebugLog.log(">>> DEBUG: No inventory reference!")
 		return
 	
-	print(">>> DEBUG: Inventory contents:")
+	DebugLog.log(">>> DEBUG: Inventory contents:")
 	for i in range(inventory.items.size()):
 		var slot = inventory.items[i]
 		if slot != null:
-			print("  Slot " + str(i) + ": " + slot.item.item_name + " x" + str(slot.quantity))
+			DebugLog.log("  Slot " + str(i) + ": " + slot.item.item_name + " x" + str(slot.quantity))
 		else:
-			print("  Slot " + str(i) + ": Empty")
+			DebugLog.log("  Slot " + str(i) + ": Empty")

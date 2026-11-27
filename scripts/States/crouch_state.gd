@@ -1,45 +1,28 @@
 extends State
 
-var has_attacked: bool = false
-
 func enter() -> void:
 	player.sprite.play("crouch")
 	player.velocity.x = 0
-	has_attacked = false
-	print(">>> Entered CROUCH state")
-
-func exit() -> void:
-	print(">>> Exited CROUCH state")
 
 func physics_update(delta: float) -> void:
-	# Apply gravity
-	if not player.is_on_floor():
-		player.velocity.y += player.get_gravity().y * delta
-	
-	var direction = Input.get_axis("ui_left", "ui_right")
-	var is_down = Input.is_action_pressed("ui_down")
-	
-	# Transitions from crouch
-	if not is_down:
-		print(">>> Crouch: Standing up")
+	player.apply_gravity(delta)
+	var buf: InputBuffer = player.input_buffer
+
+	if not Input.is_action_pressed("ui_down"):
 		transitioned.emit("idle")
 		return
-	
-	if direction != 0:
-		print(">>> Crouch: Starting crouch walk")
-		transitioned.emit("crouchwalk")
+	if player.wants_dodge():
+		transitioned.emit("dodge")
 		return
-	
-	if player.input_buffer.consume(&"attack_a") and not has_attacked:
-		has_attacked = true
-		print(">>> Crouch: Starting sweep attack")
+	if buf.consume(&"attack_a"):
 		transitioned.emit("sweep")
 		return
-	
-	if player.input_buffer.consume(&"crawl"):
-		print(">>> Crouch: Going into prone")
-		transitioned.emit("crawlenter")  # Changed to crawlenter
+	if buf.consume(&"crawl"):
+		transitioned.emit("crawlenter")
 		return
-	
+	if player.get_move_input() != 0:
+		transitioned.emit("crouchwalk")
+		return
+
 	player.velocity.x = 0
 	player.move_and_slide()

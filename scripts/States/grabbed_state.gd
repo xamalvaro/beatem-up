@@ -1,78 +1,54 @@
 extends State
 
-# Struggle meter — fills on mash, decays over time
-var struggle_meter: float = 0.0
+# Held by a zombie: mash attack_a to fill the struggle meter and break free.
+
 const FILL_PER_MASH: float = 0.25
 const DECAY_PER_SECOND: float = 0.15
 const DAMAGE_PER_SECOND: float = 5.0
 
-# Reference to the zombie that grabbed us — set by main_dude.gd before enter()
-var grabbing_zombie = null
-
+var struggle_meter: float = 0.0
 var damage_accumulator: float = 0.0
 
 func enter() -> void:
 	struggle_meter = 0.0
 	damage_accumulator = 0.0
 	player.velocity = Vector2.ZERO
-	player.sprite.play("struggle")  # Placeholder
-
-	# Show prompt above player's head
-	var ui = player.get_node_or_null("StruggleUI")
-	if ui:
-		ui.show_ui()
-
-	print(">>> Player grabbed! Mash attack_a to break free!")
+	player.sprite.play("struggle")
+	player.struggle_ui.show_ui()
 
 func exit() -> void:
-	grabbing_zombie = null
-	player.input_buffer.clear()  # Don't let leftover mash presses fire a stomp
 	struggle_meter = 0.0
-
-	# Hide prompt
-	var ui = player.get_node_or_null("StruggleUI")
-	if ui:
-		ui.hide_ui()
+	player.struggle_ui.hide_ui()
+	player.input_buffer.clear()  # Don't let leftover mash presses fire a stomp
 
 func physics_update(delta: float) -> void:
-	# Lock movement while grabbed
 	player.velocity.x = 0
-	if not player.is_on_floor():
-		player.velocity.y += player.get_gravity().y * delta
-	else:
+	if player.is_on_floor():
 		player.velocity.y = 0
+	player.apply_gravity(delta)
 
-	# Passive damage while held
+	# Damage while held (this used to be silently blocked)
 	damage_accumulator += DAMAGE_PER_SECOND * delta
 	if damage_accumulator >= 1.0:
-		var dmg = int(damage_accumulator)
+		var dmg := int(damage_accumulator)
 		damage_accumulator -= dmg
-		player.take_damage(dmg)
+		player.take_grab_damage(dmg)
+		if player.is_dead:
+			return
 
-	# Meter decay
-	struggle_meter -= DECAY_PER_SECOND * delta
-	struggle_meter = clamp(struggle_meter, 0.0, 1.0)
-
-	# Mash input
+	struggle_meter = clamp(struggle_meter - DECAY_PER_SECOND * delta, 0.0, 1.0)
 	if player.input_buffer.consume(&"attack_a"):
-		struggle_meter += FILL_PER_MASH
-		struggle_meter = clamp(struggle_meter, 0.0, 1.0)
-		print(">>> Mash! Meter: " + str(snapped(struggle_meter, 0.01)))
+		struggle_meter = clamp(struggle_meter + FILL_PER_MASH, 0.0, 1.0)
+	player.struggle_ui.set_meter(struggle_meter)
 
-	# Drive animation speed from meter value
-	var ui = player.get_node_or_null("StruggleUI")
-	if ui:
-		ui.set_meter(struggle_meter)
-
-	# Break free when meter is full
 	if struggle_meter >= 1.0:
 		_break_free()
+		return
 
 	player.move_and_slide()
 
 func _break_free() -> void:
-	print(">>> Player broke free!")
-	if grabbing_zombie and is_instance_valid(grabbing_zombie):
-		grabbing_zombie.on_player_broke_free(player)
-	player.broke_free.emit()
-	transitioned.emit("idle")
+	var zombie := player.grabbing_zombie
+	if zombie and is_instance_valid(zombie):
+		zombie.on_player_broke_free(player)
+	player.release_grab()

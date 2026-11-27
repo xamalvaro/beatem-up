@@ -23,10 +23,10 @@ func _ready() -> void:
 	for i in range(max_slots):
 		items.append(null)
 	
-	print(">>> Inventory initialized with " + str(max_slots) + " slots")
+	DebugLog.log(">>> Inventory initialized with " + str(max_slots) + " slots")
 
 func add_item(item: ItemData, quantity: int = 1) -> bool:
-	print(">>> Attempting to add: " + item.item_name + " x" + str(quantity))
+	DebugLog.log(">>> Attempting to add: " + item.item_name + " x" + str(quantity))
 	
 	# Check if item can stack with existing items
 	if item.stack_size > 1:
@@ -49,10 +49,10 @@ func add_item(item: ItemData, quantity: int = 1) -> bool:
 		if items[i] == null:
 			items[i] = InventorySlot.new(item, quantity)
 			inventory_changed.emit()
-			print(">>> Added to slot " + str(i))
+			DebugLog.log(">>> Added to slot " + str(i))
 			return true
 	
-	print(">>> Inventory full!")
+	DebugLog.log(">>> Inventory full!")
 	return false  # Inventory full
 
 func remove_item(slot_index: int, quantity: int = 1) -> bool:
@@ -100,7 +100,7 @@ func move_item(from_slot: int, to_slot: int) -> void:
 	items[to_slot] = temp
 	
 	inventory_changed.emit()
-	print(">>> Moved item from slot " + str(from_slot) + " to " + str(to_slot))
+	DebugLog.log(">>> Moved item from slot " + str(from_slot) + " to " + str(to_slot))
 
 func equip_item(slot_index: int) -> bool:
 	var item = get_item(slot_index)
@@ -109,7 +109,7 @@ func equip_item(slot_index: int) -> bool:
 		return false
 	
 	if not item.can_equip:
-		print(">>> Cannot equip: " + item.item_name)
+		DebugLog.log(">>> Cannot equip: " + item.item_name)
 		return false
 	
 	# Unequip current item if any
@@ -118,7 +118,7 @@ func equip_item(slot_index: int) -> bool:
 	
 	equipped_item = item
 	item_equipped.emit(item)
-	print(">>> Equipped: " + item.item_name)
+	DebugLog.log(">>> Equipped: " + item.item_name)
 	return true
 
 func unequip_item() -> void:
@@ -128,7 +128,7 @@ func unequip_item() -> void:
 	var item = equipped_item
 	equipped_item = null
 	item_unequipped.emit(item)
-	print(">>> Unequipped: " + item.item_name)
+	DebugLog.log(">>> Unequipped: " + item.item_name)
 
 func use_item(slot_index: int) -> bool:
 	var item = get_item(slot_index)
@@ -157,7 +157,7 @@ func drop_item(slot_index: int, quantity: int = 1) -> ItemData:
 	# Remove from inventory
 	remove_item(slot_index, quantity)
 	
-	print(">>> Dropped: " + item.item_name + " x" + str(quantity))
+	DebugLog.log(">>> Dropped: " + item.item_name + " x" + str(quantity))
 	return item
 	
 func throw_item(slot_index: int) -> ItemData:
@@ -167,11 +167,11 @@ func throw_item(slot_index: int) -> ItemData:
 		return null
 	
 	if item.throw_damage <= 0:
-		print(">>> Cannot throw: " + item.item_name)
+		DebugLog.log(">>> Cannot throw: " + item.item_name)
 		return null
 	
 	# Remove from inventory
 	remove_item(slot_index, 1)
 	
-	print(">>> Throwing: " + item.item_name)
+	DebugLog.log(">>> Throwing: " + item.item_name)
 	return item

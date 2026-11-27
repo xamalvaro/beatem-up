@@ -14,6 +14,7 @@ class_name ItemData
 # Weapon stats (if equippable)
 @export var weapon_damage: int = 0
 @export var attack_speed_multiplier: float = 1.0
+@export var damage_multiplier: float = 1.0   # Melee damage multiplier while equipped
 
 func use_item(player) -> void:
 	match use_effect:
@@ -30,4 +31,4 @@ func use_item(player) -> void:
 			if player.has_method("heal"):
 				player.heal(999)  # Heal to max
 		_:
-			print(">>> Item used: " + item_name + " (no effect)")
+			DebugLog.log(">>> Item used: " + item_name + " (no effect)")

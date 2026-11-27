@@ -5,7 +5,7 @@ class_name State
 signal transitioned(new_state_name: String)
 
 # Reference to the player (will be set by state machine)
-var player: CharacterBody2D
+var player: Player
 
 # Called when entering this state
 func enter() -> void:
@@ -36,8 +36,14 @@ func try_neutral_actions() -> bool:
 		player.jump_requested = false
 		transitioned.emit("jump")
 		return true
+	if player.wants_dodge():
+		transitioned.emit("dodge")
+		return true
 	if buf.consume(&"attack_a"):
 		transitioned.emit("sweep" if Input.is_action_pressed("ui_down") else "stomp")
+		return true
+	if buf.consume(&"attack_b"):
+		transitioned.emit("heavy")
 		return true
 	if buf.consume(&"crawl"):
 		transitioned.emit("crawlenter")

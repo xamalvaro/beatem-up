@@ -6,7 +6,7 @@ class_name InputBuffer
 # The player calls update() once per physics frame BEFORE states run,
 # and states call consume() instead of Input.is_action_just_pressed().
 
-const ACTIONS: Array[StringName] = [&"attack_a", &"attack_b", &"ui_accept", &"crawl"]
+const ACTIONS: Array[StringName] = [&"attack_a", &"attack_b", &"ui_accept", &"crawl", &"dodge"]
 const DEFAULT_WINDOW: float = 0.15  # ~9 frames at 60 fps
 
 var _time: float = 0.0
@@ -34,3 +34,12 @@ func peek(action: StringName, window: float = DEFAULT_WINDOW) -> bool:
 
 func clear() -> void:
 	_pressed_at.clear()
+
+# For the debug overlay: buffered actions and how long ago they were pressed
+func debug_string() -> String:
+	var parts: PackedStringArray = []
+	for action in _pressed_at:
+		var age: float = _time - _pressed_at[action]
+		if age <= 1.0:
+			parts.append("%s %df" % [action, int(age * 60.0)])
+	return ", ".join(parts) if parts.size() > 0 else "-"

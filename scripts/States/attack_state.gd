@@ -1,153 +1,134 @@
 extends State
 class_name AttackState
 
-# Attack timeline:
+# Generic attack driven by an AttackData resource (scripts/attacks/*.tres).
 #
-#   0 ──── attack_duration ──── + recovery ──→ back to neutral
-#   [ hitbox on            ][ hitbox off    ]
-#              ^ cancel_start            ^ move_cancel_start
+#   | startup | active (hitbox on) | recovery |
 #
-# - Combo presses made ANY time during the attack are remembered (input buffer)
-#   and fire as soon as the cancel point is reached, so mashing never drops inputs.
-# - After the attack, the player returns to neutral right away instead of
-#   being frozen for a combo window.
-# - Movement / jump can cut the end of the recovery short.
+# - Combo presses made at ANY point in the attack are remembered and fire as
+#   soon as a cancel is allowed: on hit (hit-confirm) or once active ends.
+# - Movement/jump/dodge can cancel the second half of recovery.
+# - When the attack ends you go straight back to neutral.
 
-@export var attack_duration: float = 0.4   # Hitbox active time
-@export var recovery: float = 0.1          # Hitbox off, still committed
-@export var cancel_ratio: float = 0.7      # Fraction of attack_duration before a combo can cancel
-@export var move_cancel_ratio: float = 0.5 # Fraction of recovery before move/jump can cancel
-@export var can_move_during_attack: bool = false
-@export var attack_animation: String = "stomp"
-@export var fit_animation: bool = true     # Speed the animation up/down to match the attack length
-
-# Base damage — axe doubles it
-@export var attack_damage: int = 1
-const AXE_ITEM_NAME: String = "Fireman Axe"
-
-# Combo routes
-@export var next_attack_a: String = ""
-@export var next_attack_b: String = ""
-@export var directional_attacks: Dictionary = {}  # "down_a" / "down_b" -> state name
+@export var data: AttackData
 
 var attack_timer: float = 0.0
-var attack_finished: bool = false
+var has_hit: bool = false
+var _hitbox_done: bool = false
+
+func _ready() -> void:
+	if data == null:
+		push_error("AttackState '%s' has no AttackData" % name)
 
 func enter() -> void:
 	attack_timer = 0.0
-	attack_finished = false
+	has_hit = false
+	_hitbox_done = false
 	player.velocity.x = 0
 
-	# Turn around at the start of each attack (lets you combo enemies on both sides)
+	# Turn around at the start of each attack (combo enemies on both sides)
 	player.face(player.get_move_input())
 
-	player.sprite.play(attack_animation)
-	if fit_animation:
-		_fit_animation_speed()
-	_enable_hitbox()
+	player.sprite.play(data.animation)
+	if data.fit_animation:
+		_fit_animation_speed(data.total_time())
+	if not player.hitbox.hit_landed.is_connected(_on_hit_landed):
+		player.hitbox.hit_landed.connect(_on_hit_landed)
 
 func exit() -> void:
-	_disable_hitbox()
+	player.hitbox.deactivate()
 	player.sprite.speed_scale = 1.0
+	if player.hitbox.hit_landed.is_connected(_on_hit_landed):
+		player.hitbox.hit_landed.disconnect(_on_hit_landed)
 
-func _fit_animation_speed() -> void:
+func _on_hit_landed(_body: Node2D) -> void:
+	has_hit = true
+
+func _fit_animation_speed(total: float) -> void:
 	var frames: SpriteFrames = player.sprite.sprite_frames
-	if not frames or not frames.has_animation(attack_animation):
+	if not frames or not frames.has_animation(data.animation) or total <= 0.0:
 		return
-	var fps: float = frames.get_animation_speed(attack_animation)
-	var total := attack_duration + recovery
-	if fps <= 0.0 or total <= 0.0:
+	var fps: float = frames.get_animation_speed(data.animation)
+	if fps <= 0.0:
 		return
-	var anim_length: float = frames.get_frame_count(attack_animation) / fps
+	var anim_length: float = frames.get_frame_count(data.animation) / fps
 	player.sprite.speed_scale = anim_length / total
 
-func _enable_hitbox() -> void:
-	var hitbox = player.get_node_or_null("PunchHitBox")
-	if hitbox:
-		hitbox.set_meta("damage", _get_attack_damage())
-		hitbox.get_node("CollisionShape2D").disabled = false
-		hitbox.monitoring = true
-		_update_hitbox_direction(hitbox)
+func get_damage() -> int:
+	return int(round(data.damage * player.get_damage_multiplier()))
 
-func _disable_hitbox() -> void:
-	var hitbox = player.get_node_or_null("PunchHitBox")
-	if hitbox:
-		hitbox.set_deferred("monitoring", false)
-		hitbox.get_node("CollisionShape2D").set_deferred("disabled", true)
+func facing() -> float:
+	return -1.0 if player.sprite.flip_h else 1.0
 
-func _update_hitbox_direction(hitbox: Node) -> void:
-	# Move the CollisionShape2D child, not the Area2D parent.
-	var shape = hitbox.get_node_or_null("CollisionShape2D")
-	if shape:
-		shape.position.x = abs(shape.position.x) * (-1 if player.sprite.flip_h else 1)
+# Hitbox on during [startup, startup + active). active < 0 = never auto-off.
+func update_hitbox() -> void:
+	if _hitbox_done:
+		return
+	if not player.hitbox.is_active() and attack_timer >= data.startup_time():
+		player.hitbox.activate(data, get_damage(), facing())
+	if player.hitbox.is_active():
+		player.hitbox.set_facing(facing())
+		if data.active >= 0 and attack_timer >= data.active_end_time():
+			player.hitbox.deactivate()
+			_hitbox_done = true
 
-func _get_attack_damage() -> int:
-	var inventory = player.get_node_or_null("Inventory")
-	if inventory and inventory.equipped_item:
-		if inventory.equipped_item.item_name == AXE_ITEM_NAME:
-			return attack_damage * 2
-	return attack_damage
-
-# Returns the state to combo into if a combo button was pressed during this
-# attack, or "" if none. Presses are remembered for the whole attack.
-func _get_buffered_combo() -> String:
+# State to combo into if a combo button was pressed during this attack.
+func get_buffered_combo() -> String:
 	var buf: InputBuffer = player.input_buffer
 	var window := attack_timer + InputBuffer.DEFAULT_WINDOW
 	var is_down := Input.is_action_pressed("ui_down")
-
-	if buf.peek(&"attack_a", window):
-		var target: String = directional_attacks.get("down_a", "") if is_down else ""
-		if target == "":
-			target = next_attack_a
+	for pair in [[&"attack_a", data.down_a, data.next_a], [&"attack_b", data.down_b, data.next_b]]:
+		if not buf.peek(pair[0], window):
+			continue
+		var target: String = pair[1] if is_down and pair[1] != "" else pair[2]
 		if target != "":
-			buf.consume(&"attack_a", window)
-			return target
-	if buf.peek(&"attack_b", window):
-		var target: String = directional_attacks.get("down_b", "") if is_down else ""
-		if target == "":
-			target = next_attack_b
-		if target != "":
-			buf.consume(&"attack_b", window)
+			buf.consume(pair[0], window)
 			return target
 	return ""
 
+func can_combo_cancel() -> bool:
+	if data.forced_followup != "":
+		return false
+	if has_hit and attack_timer >= data.startup_time():
+		return true  # Hit-confirm
+	return data.active >= 0 and attack_timer >= data.active_end_time()
+
+func neutral_state() -> String:
+	if data.forced_followup != "":
+		return data.forced_followup
+	return "run" if player.get_move_input() != 0 else "idle"
+
 func physics_update(delta: float) -> void:
 	attack_timer += delta
-	player.apply_gravity(delta)
+	player.apply_gravity(delta, data.gravity_multiplier)
 
-	if can_move_during_attack:
-		var direction = player.get_move_input()
-		if direction != 0:
-			player.velocity.x = direction * player.SPEED * 0.5
-			player.face(direction)
-	else:
+	var direction := player.get_move_input()
+	if data.air_control > 0.0 and direction != 0:
+		player.velocity.x = direction * player.SPEED * data.air_control
+		player.face(direction)
+	elif data.lunge_speed > 0.0 and attack_timer < data.active_end_time():
+		player.velocity.x = data.lunge_speed * facing()
+	elif player.is_on_floor():
 		player.velocity.x = 0
 
-	var hitbox = player.get_node_or_null("PunchHitBox")
-	if hitbox and hitbox.monitoring:
-		_update_hitbox_direction(hitbox)
+	update_hitbox()
 
-	# End of active frames — hitbox off
-	if not attack_finished and attack_timer >= attack_duration:
-		attack_finished = true
-		_disable_hitbox()
-
-	# Combo cancel (from late in the active frames onward)
-	if attack_timer >= attack_duration * cancel_ratio:
-		var combo := _get_buffered_combo()
+	if can_combo_cancel():
+		var combo := get_buffered_combo()
 		if combo != "":
 			transitioned.emit(combo)
 			return
 
-	# Movement / jump cancel during the back half of recovery
-	if attack_timer >= attack_duration + recovery * move_cancel_ratio:
-		if player.input_buffer.peek(&"ui_accept", player.JUMP_BUFFER) or player.get_move_input() != 0:
-			transitioned.emit("run" if player.get_move_input() != 0 else "idle")
+	var total := data.total_time()
+	# Movement / jump / dodge cancel in the back half of recovery
+	if data.forced_followup == "" and attack_timer >= total - data.recovery / AttackData.FPS * 0.5:
+		var buf: InputBuffer = player.input_buffer
+		if buf.peek(&"ui_accept", player.JUMP_BUFFER) or buf.peek(&"dodge") or direction != 0:
+			transitioned.emit(neutral_state())
 			return
 
-	# Attack fully over — straight back to neutral
-	if attack_timer >= attack_duration + recovery:
-		transitioned.emit("run" if player.get_move_input() != 0 else "idle")
+	if attack_timer >= total:
+		transitioned.emit(neutral_state())
 		return
 
 	player.move_and_slide()

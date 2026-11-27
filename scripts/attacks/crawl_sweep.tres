@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="AttackData" format=3]
+
+[ext_resource type="Script" path="res://scripts/attacks/attack_data.gd" id="1_data"]
+
+[resource]
+script = ExtResource("1_data")
+animation = &"sweep"
+damage = 1
+startup = 8
+active = 5
+recovery = 12
+knockback = Vector2(40, 0)
+hitstun = 24
+hitstop = 5
+knockdown = true
+hitbox_offset_y = 6.0
+forced_followup = "pushup"

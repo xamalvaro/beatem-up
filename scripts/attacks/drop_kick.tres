@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="AttackData" format=3]
+
+[ext_resource type="Script" path="res://scripts/attacks/attack_data.gd" id="1_data"]
+
+[resource]
+script = ExtResource("1_data")
+animation = &"drop_kick"
+damage = 2
+startup = 3
+active = -1
+recovery = 10
+fit_animation = false
+knockback = Vector2(140, -40)
+hitstun = 24
+hitstop = 6
+screen_shake = 1.5
+hitbox_offset_y = 2.0
+air_control = 0.4
+gravity_multiplier = 1.5

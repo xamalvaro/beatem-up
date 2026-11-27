@@ -6,7 +6,7 @@
 
 [node name="ThrownItem" type="Area2D" unique_id=841110615]
 collision_layer = 16
-collision_mask = 6
+collision_mask = 256
 script = ExtResource("1_vbwfu")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=975266401]

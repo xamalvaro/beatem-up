@@ -7,16 +7,11 @@
 [ext_resource type="Script" uid="uid://dt5j6mpvak21a" path="res://scripts/States/idle_state.gd" id="4_vk2w2"]
 [ext_resource type="Script" uid="uid://c3ehcg6mord4t" path="res://scripts/States/run_state.gd" id="5_cstp5"]
 [ext_resource type="Script" uid="uid://rqx1guppwde8" path="res://scripts/States/jump_state.gd" id="6_w0us6"]
-[ext_resource type="Script" uid="uid://dvumudi88i370" path="res://scripts/States/stomp_state.gd" id="7_ch0gb"]
-[ext_resource type="Script" uid="uid://b10o5te4smxrs" path="res://scripts/States/stomp2_state.gd" id="8_4ud2p"]
-[ext_resource type="Script" uid="uid://dbqh8ki343q8y" path="res://scripts/States/stomp3_state.gd" id="9_yvq3c"]
-[ext_resource type="Script" uid="uid://buhkffl7f6yip" path="res://scripts/States/sweep_state.gd" id="10_i5gdq"]
 [ext_resource type="Script" uid="uid://cvuntupvrexge" path="res://scripts/States/drop_kick_state.gd" id="11_s1h8e"]
 [ext_resource type="Script" uid="uid://pr6b5br7fhyf" path="res://scripts/States/crouch_state.gd" id="12_4wouk"]
 [ext_resource type="Script" uid="uid://h36w06pmavih" path="res://scripts/States/crouch_walk_state.gd" id="13_fhthk"]
 [ext_resource type="Script" uid="uid://b20pw8prwvo5k" path="res://scripts/States/crawl_idle_state.gd" id="14_6itht"]
 [ext_resource type="Script" uid="uid://cp6wi2s8lxedb" path="res://scripts/States/pushup_state.gd" id="15_eb7yp"]
-[ext_resource type="Script" uid="uid://cae8dx2qemy8" path="res://scripts/States/crawlsweep_state.gd" id="16_4ud2p"]
 [ext_resource type="Script" uid="uid://cytcqxd24ajp0" path="res://scripts/States/crawl_enter_state.gd" id="16_i5gdq"]
 [ext_resource type="Script" uid="uid://h017w27hm8ms" path="res://scripts/States/crawl_move_state.gd" id="18_s1h8e"]
 [ext_resource type="Script" uid="uid://bwyj2e7env5fi" path="res://scripts/States/grabbed_state.gd" id="19_eb7yp"]
@@ -24,6 +19,17 @@
 [ext_resource type="Script" uid="uid://3tufg30dcaas" path="res://scripts/punch_hitbox.gd" id="20_4wouk"]
 [ext_resource type="Script" uid="uid://dt1wrfo7jrmax" path="res://scripts/ui/struggle_ui.gd" id="21_6itht"]
 [ext_resource type="Texture2D" uid="uid://cup4gdsf8jmje" path="res://assets/UI animations/StruggleButtonMash.png" id="22_eb7yp"]
+[ext_resource type="Script" uid="uid://f54s5ll1rgn" path="res://scripts/States/attack_state.gd" id="30_attack"]
+[ext_resource type="Script" path="res://scripts/States/hurt_state.gd" id="31_hurt"]
+[ext_resource type="Script" path="res://scripts/States/dodge_state.gd" id="32_dodge"]
+[ext_resource type="Script" path="res://scripts/States/dead_state.gd" id="33_dead"]
+[ext_resource type="Resource" path="res://scripts/attacks/stomp1.tres" id="40_stomp1"]
+[ext_resource type="Resource" path="res://scripts/attacks/stomp2.tres" id="41_stomp2"]
+[ext_resource type="Resource" path="res://scripts/attacks/stomp3.tres" id="42_stomp3"]
+[ext_resource type="Resource" path="res://scripts/attacks/heavy.tres" id="43_heavy"]
+[ext_resource type="Resource" path="res://scripts/attacks/sweep.tres" id="44_sweep"]
+[ext_resource type="Resource" path="res://scripts/attacks/drop_kick.tres" id="45_drop_kick"]
+[ext_resource type="Resource" path="res://scripts/attacks/crawl_sweep.tres" id="46_crawl_sweep"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_y12ej"]
 atlas = ExtResource("2_n3ej1")
@@ -364,7 +370,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_wmm0w")
 }],
-"loop": true,
+"loop": false,
 "name": &"drop_kick",
 "speed": 10.0
 }, {
@@ -378,7 +384,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_15id0")
 }],
-"loop": true,
+"loop": false,
 "name": &"going_prone",
 "speed": 5.0
 }, {
@@ -426,7 +432,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_wpqbc")
 }],
-"loop": true,
+"loop": false,
 "name": &"pushup",
 "speed": 5.0
 }, {
@@ -475,7 +481,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_7rxto")
 }],
-"loop": true,
+"loop": false,
 "name": &"stomp",
 "speed": 10.0
 }, {
@@ -536,7 +542,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_5c15m")
 }],
-"loop": true,
+"loop": false,
 "name": &"sweep",
 "speed": 10.0
 }]
@@ -584,7 +590,8 @@ animations = [{
 }]
 
 [node name="MainDude" type="CharacterBody2D" unique_id=572648291 groups=["player"]]
-collision_layer = 3
+collision_layer = 128
+collision_mask = 257
 script = ExtResource("1_imk3f")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1366864291]
@@ -628,22 +635,41 @@ script = ExtResource("14_6itht")
 script = ExtResource("16_i5gdq")
 
 [node name="Stomp3" type="Node" parent="State_machine" unique_id=1562525783]
-script = ExtResource("9_yvq3c")
+script = ExtResource("30_attack")
+data = ExtResource("42_stomp3")
 
 [node name="Stomp" type="Node" parent="State_machine" unique_id=654176875]
-script = ExtResource("7_ch0gb")
+script = ExtResource("30_attack")
+data = ExtResource("40_stomp1")
 
 [node name="Stomp2" type="Node" parent="State_machine" unique_id=546933480]
-script = ExtResource("8_4ud2p")
+script = ExtResource("30_attack")
+data = ExtResource("41_stomp2")
 
 [node name="DropKick" type="Node" parent="State_machine" unique_id=1377995427]
 script = ExtResource("11_s1h8e")
+data = ExtResource("45_drop_kick")
 
 [node name="Sweep" type="Node" parent="State_machine" unique_id=1185651877]
-script = ExtResource("10_i5gdq")
+script = ExtResource("30_attack")
+data = ExtResource("44_sweep")
 
 [node name="CrawlSweep" type="Node" parent="State_machine" unique_id=1146448659]
-script = ExtResource("16_4ud2p")
+script = ExtResource("30_attack")
+data = ExtResource("46_crawl_sweep")
+
+[node name="Heavy" type="Node" parent="State_machine"]
+script = ExtResource("30_attack")
+data = ExtResource("43_heavy")
+
+[node name="Hurt" type="Node" parent="State_machine"]
+script = ExtResource("31_hurt")
+
+[node name="Dodge" type="Node" parent="State_machine"]
+script = ExtResource("32_dodge")
+
+[node name="Dead" type="Node" parent="State_machine"]
+script = ExtResource("33_dead")
 
 [node name="Grabbed" type="Node" parent="State_machine" unique_id=821234300]
 script = ExtResource("19_eb7yp")
@@ -653,7 +679,8 @@ script = ExtResource("19_s1h8e")
 
 [node name="PunchHitBox" type="Area2D" parent="." unique_id=1887402298]
 collision_layer = 32
-collision_mask = 2
+collision_mask = 256
+monitoring = false
 script = ExtResource("20_4wouk")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PunchHitBox" unique_id=1259109213]

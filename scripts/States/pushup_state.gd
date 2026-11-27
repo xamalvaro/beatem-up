@@ -1,24 +1,20 @@
 extends State
 
-var recovery_time: float = 0.0
-var recovery_duration: float = 0.6  # Made slightly longer
+# Standing back up from prone. Can't be cancelled (the cost of going prone).
+
+const RECOVERY_DURATION: float = 0.6
+var timer: float = 0.0
 
 func enter() -> void:
-	player.sprite.play("pushup")
-	recovery_time = 0.0
+	timer = 0.0
 	player.velocity.x = 0
+	player.sprite.play("pushup")
 
 func physics_update(delta: float) -> void:
-	recovery_time += delta
-	
-	# Apply gravity
-	if not player.is_on_floor():
-		player.velocity.y += player.get_gravity().y * delta
-	
-	# Cannot cancel recovery - must finish
-	# After recovery animation, go to idle (stand up)
-	if recovery_time >= recovery_duration:
-		transitioned.emit("idle")  # Stand up after recovery
-	
+	timer += delta
+	player.apply_gravity(delta)
 	player.velocity.x = 0
+	if timer >= RECOVERY_DURATION:
+		transitioned.emit("idle")
+		return
 	player.move_and_slide()

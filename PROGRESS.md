@@ -13,7 +13,11 @@ This document summarizes everything done on the project so far, based on the rep
 | Attack combos (stomps, sweep, drop kick, crawl sweep) | ✅ Working |
 | Player & enemy hitboxes | ✅ Working (follow facing direction) |
 | Zombie enemy (chase, lunge attack, stun, knockback, death) | ✅ Working |
-| Grab mechanic + button-mash escape | ✅ Functional (animations need polish) |
+| Grab mechanic + button-mash escape | ✅ Working: needs a staggered player, deals damage (animations need polish) |
+| Input buffer, cancels, coyote/variable jump | ✅ Working |
+| Frame data, hitstop, hitstun, knockdown, screen shake | ✅ Working |
+| Heavy attack (D), dodge (Shift), hurt + death states | ✅ Working (placeholder animations) |
+| Automated playtest + F3 debug overlay | ✅ Working |
 | Inventory UI + item pickup | ✅ Working |
 | Usable items (Bandage, Energy Drink) | ✅ Working |
 | Throwable weapon (Fireman Axe) | ✅ Working |
@@ -27,8 +31,10 @@ This document summarizes everything done on the project so far, based on the rep
 | Move left / right | Arrow keys (`ui_left` / `ui_right`) |
 | Crouch | Down arrow (`ui_down`) |
 | Jump | Space / Enter (`ui_accept`) |
-| Attack A | **S** |
-| Attack B | **D** |
+| Attack A (combo: S, S, S) | **S** |
+| Attack B, heavy kick (S, S, D branches into it) | **D** |
+| Dodge (i-frames) | **Shift** |
+| Debug overlay | **F3** |
 | Crawl / go prone | **C** |
 | Pick up item | **E** |
 | Throw equipped item | **T** |
@@ -112,6 +118,40 @@ Current item definitions (`scripts/item/*.tres`):
 
 ---
 
+### Phase 8 — Game Feel & Optimization Overhaul (Nov 2026)
+
+Done to address feedback that combat "feels a bit clunky". Full details in `OPTIMIZATION_PLAN.md`.
+
+- **Responsiveness:**
+  - Input buffer, so presses are no longer dropped.
+  - Attacks recover fast (a stomp went from 49 to 19 frames).
+  - Hit-confirm combo cancels, plus movement/jump cancels of late recovery.
+  - Coyote time, jump buffer and variable jump height.
+- **Hit feel:**
+  - Per-attack frame data (`scripts/attacks/*.tres`).
+  - Hitstop, screen shake and hit sparks.
+  - Zombie hitstun, knockback and knockdown.
+  - One swing hits every zombie it touches.
+- **Depth:**
+  - Heavy kick on D and an S,S,D branch.
+  - Dodge with i-frames.
+  - Player hurt and death states.
+  - Fair grabs: staggered players only, from close range, and the grab now deals damage.
+- **Cleanup:**
+  - Zombie state machine.
+  - One data-driven attack script.
+  - Named collision layers.
+  - `DebugLog` replaces 108 prints.
+  - Cached node lookups.
+- **Bug fixes:**
+  - Crawl sweep dealt no damage.
+  - Grab damage never applied.
+  - The grab-triggering hit couldn't kill.
+  - Zombies teleported in to grab.
+  - Thrown items hit from 45 px away.
+  - Inventory UI path casing broke loading on Linux.
+- **Tests:** `tests/feel_test.gd` (29 checks) and `tests/soak_test.gd`.
+
 ## Project Structure
 
 ```
@@ -124,15 +164,26 @@ scenes/
   game.tscn, main_dude.tscn, enemy.tscn, Pickup_item.tscn, thrown_item.tscn
   UI/ InventoryUI.tscn, inventory_slot.tscn, health_bar.tscn
 scripts/
-  main_dude.gd, enemy.gd, punch_hitbox.gd, thrown_item.gd
+  main_dude.gd, enemy.gd, punch_hitbox.gd, thrown_item.gd, input_buffer.gd
+  attacks/   AttackData + one .tres per attack (frame data, damage, combos)
+  autoload/  GameFeel (hitstop/shake/sparks), DebugOverlay (F3), DebugLog
   States/    state machine + all player states
   inventory/ inventory.gd, inventory_slot.gd, item.gd, pickup_item.gd
   item/      Bandage, Energy_Drink, FiremanAxe (.tres)
   ui/        health_bar.gd, inventory_ui.gd, struggle_ui.gd
 ```
 
-## Known To-Dos
+## Running the tests
 
+```
+godot --headless --fixed-fps 60 -s res://tests/feel_test.gd
+godot --headless --fixed-fps 60 -s res://tests/soak_test.gd
+```
+
+## Known To-Dos
+- Real animations for hurt, dodge, death, and a heavy kick (they currently reuse other animations).
+- Hit spark art (currently a procedural placeholder).
+- Blocking.
 - Polish grab/struggle animations.
 - Implement the Pistol/Magnum weapon using the new sprites.
 - Add more enemy types and level content using the city tileset.

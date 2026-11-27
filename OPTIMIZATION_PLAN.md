@@ -6,6 +6,8 @@ This plan comes from a read-through of every gameplay script (`scripts/States/*`
 
 ---
 
+> **Status: all five phases are done.** Run `godot --headless --fixed-fps 60 -s res://tests/feel_test.gd` for the 29-check automated playtest. The notes under each phase say where the result differs from the original plan.
+
 ## Why it feels clunky (root causes)
 
 Fighting-game players notice **input lag, dropped inputs, long recovery, and hits with no weight**. The code has all four.
@@ -72,7 +74,9 @@ Each phase is shippable on its own and can be tested in-game before moving on. P
 3. **Jump improvements.** Check for landing after `move_and_slide`, handle walking off ledges, and add **coyote time** (~0.1 s), a **jump buffer** (~0.1 s, via the input buffer) and **variable jump height** (cut upward velocity when the button is released).
 4. **Turn-around between attacks.** Read the facing direction when each attack starts.
 
-### Phase 2 — Hit feel ("juice")
+### Phase 2 — Hit feel ("juice") ✅ DONE
+
+> Done. Frame data lives in `scripts/attacks/*.tres` (`AttackData`). Hitstop, screen shake and hit sparks are in the `GameFeel` autoload. Zombies now take hitstun, knockback and knockdown, and one swing hits every zombie it touches. The spark is a procedural placeholder until there's art.
 
 1. **Frame data per attack**: `startup`, `active`, `recovery` (in frames at 60 fps). Enable the hitbox only during the active frames. Store it in an `AttackData` resource: damage, frame data, hitbox offset and size, knockback, hitstop, next combo moves.
 2. **Make attack animations non-looping** and set their fps so the animation length equals startup + active + recovery.
@@ -81,7 +85,17 @@ Each phase is shippable on its own and can be tested in-game before moving on. P
 5. **Multi-target hits**: each hitbox activation keeps a `hit_this_swing` set, so every enemy is hit once per swing instead of only the first.
 6. **Small screen shake** on heavy hits, plus a hit spark sprite.
 
-### Phase 3 — Combat depth
+### Phase 3 — Combat depth ✅ DONE
+
+> Done.
+> - **D = heavy lunging kick.** S,S,D branches into it from the combo.
+> - **Grabs.** A zombie can only grab a *staggered* player (hit twice within 2.5 s) from within 24 px. Bodies can't overlap closer than 16 px, so the original close-range grab could never actually happen.
+> - **Damage.** Grab damage now applies, every damage path checks for death, and getting hit interrupts your attack (Hurt state).
+> - **Dodge.** Shift dashes with i-frames.
+> - **Death.** The player restarts the level after 2.5 s.
+> - **Not done:** blocking (needs art and a design decision).
+>
+> Hurt, Dodge and Dead reuse existing animations as placeholders.
 
 1. **Give Attack B (D) a purpose**, e.g. a heavier, slower kick that launches or knocks back. Add a branching combo: `S, S, D` = launcher, `S, S, S` = finisher.
 2. **Make the stagger/grab fairer**:
@@ -91,7 +105,15 @@ Each phase is shippable on its own and can be tested in-game before moving on. P
    - Check for death on every damage path.
 3. **Optional**: a dodge/backdash with i-frames, and a block. Both are expected by fighting-game players.
 
-### Phase 4 — Code cleanup & efficiency
+### Phase 4 — Code cleanup & efficiency ✅ DONE
+
+> Done.
+> - **Zombie AI** is an enum state machine in `enemy.gd` (no `await` timers). The unused, already-broken `state_machine.gd` is deleted.
+> - **Attacks.** Stomp/Stomp2/Stomp3/Sweep/CrawlSweep/Heavy share one `attack_state.gd` with a `.tres` each.
+> - **Collision layers** are named in Project Settings and set only in the scenes.
+> - **Logging.** All prints go through `DebugLog.log()` and are off by default.
+> - **Items.** The axe bonus is `ItemData.damage_multiplier`.
+> - **Bug found.** Thrown items used to hit the zombie's 45 px *detection* radius, which killed zombies from far away. They now hit the body.
 
 1. **Cache node references** on the player (`sprite`, `hitbox`, `hitbox_shape`, `inventory`, `struggle_ui`). States use `player.sprite` etc.
 2. **Base-class helpers** on `State`: `apply_gravity(delta)`, `get_move_input()`, `face(direction)`. Remove the duplicated code from all 15 states.
@@ -102,7 +124,9 @@ Each phase is shippable on its own and can be tested in-game before moving on. P
 7. **Replace the axe name check** with an `item.damage_multiplier` (or `weapon_damage`) field, which already exists on the resource.
 8. **Remove the `_process` debug poll** in `inventory_ui.gd`, or handle it in `_unhandled_input`.
 
-### Phase 5 — Verify
+### Phase 5 — Verify ✅ DONE
+
+> Done. `tests/feel_test.gd` covers the checklist below (29 checks). `tests/soak_test.gd` runs real zombie AI. Press **F3** in game for the debug overlay.
 
 - Playtest checklist: buffered 3-hit combo, cancel into jump, turn-around combo, jump buffer and coyote jump, drop kick reachable, multi-zombie hit, grab only at close range, grab damage, death on any damage source.
 - Show an on-screen debug overlay (current state, buffered inputs, frame counter) to tune frame data with your friend.

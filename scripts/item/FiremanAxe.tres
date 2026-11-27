@@ -17,4 +17,5 @@ item_type = "weapon"
 can_equip = true
 throw_damage = 15
 weapon_damage = 30
+damage_multiplier = 2.0
 metadata/_custom_type_script = "uid://l4oxgp0u6rct"

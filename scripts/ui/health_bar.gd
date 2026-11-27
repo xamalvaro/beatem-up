@@ -12,7 +12,7 @@ func _ready() -> void:
 		player.health_changed.connect(_on_health_changed)
 		_on_health_changed(player.current_health, player.max_health)
 	else:
-		print(">>> ERROR: Could not find player for health bar")
+		DebugLog.log(">>> ERROR: Could not find player for health bar")
 
 func _on_health_changed(current: int, maximum: int) -> void:
 	if not progress_bar or not health_label:

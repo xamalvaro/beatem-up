@@ -33,36 +33,32 @@ func _ready() -> void:
 		sprite.scale = Vector2(.65, .65)
 		sprite.play("idle")
 	else:
-		print(">>> WARNING: " + (item_data.item_name if item_data else "Unknown") + " has no sprite_sheet assigned!")
+		DebugLog.log(">>> WARNING: " + (item_data.item_name if item_data else "Unknown") + " has no sprite_sheet assigned!")
 
 	# Connect signals
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
 
-	# Set collision layers
-	collision_layer = 8  # Layer 4 (2^3 = 8)
-	collision_mask = 1   # Detect player on layer 1
-
 func _on_body_entered(body: Node2D) -> void:
 	if body.is_in_group("player"):
 		player_nearby = true
 		player_ref = body
-		print(">>> Near item: " + item_data.item_name)
+		DebugLog.log(">>> Near item: " + item_data.item_name)
 
 func _on_body_exited(body: Node2D) -> void:
 	if body.is_in_group("player"):
 		player_nearby = false
 		player_ref = null
 
-func _process(_delta: float) -> void:
-	if player_nearby and Input.is_action_just_pressed("pickup"):
+func _unhandled_input(event: InputEvent) -> void:
+	if player_nearby and event.is_action_pressed("pickup"):
 		pickup()
 
 func pickup() -> void:
 	if player_ref and item_data:
 		var inventory = player_ref.get_node_or_null("Inventory")
 		if inventory and inventory.add_item(item_data, quantity):
-			print(">>> Picked up: " + item_data.item_name + " x" + str(quantity))
+			DebugLog.log(">>> Picked up: " + item_data.item_name + " x" + str(quantity))
 			queue_free()  # Remove from world
 		else:
-			print(">>> Inventory full!")
+			DebugLog.log(">>> Inventory full!")
