@@ -667,5 +667,5 @@ script = ExtResource("21_6itht")
 position = Vector2(0, 10.000003)
 scale = Vector2(0.26562497, 0.2656251)
 sprite_frames = SubResource("SpriteFrames_rlw1s")
-frame = 1
-frame_progress = 0.96726847
+frame = 3
+frame_progress = 0.60585314
