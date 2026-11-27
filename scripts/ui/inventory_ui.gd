@@ -9,7 +9,7 @@ extends CanvasLayer
 
 
 var inventory: Inventory
-var slot_scene = preload("res://scenes/ui/inventory_slot.tscn")
+var slot_scene = preload("res://scenes/UI/inventory_slot.tscn")
 var slots: Array = []
 var selected_slot: int = -1
 var is_open: bool = false

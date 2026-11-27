@@ -3,7 +3,7 @@ extends State
 const CROUCH_SPEED = 50.0
 
 func enter() -> void:
-	player.get_node("AnimatedSprite2D").play("crouch_walk")
+	player.sprite.play("crouch_walk")
 
 func physics_update(delta: float) -> void:
 	# Apply gravity
@@ -24,18 +24,18 @@ func physics_update(delta: float) -> void:
 		transitioned.emit("crouch")
 		return
 	
-	if Input.is_action_just_pressed("attack_a"):
+	if player.input_buffer.consume(&"attack_a"):
 		transitioned.emit("sweep")
 		return
 	
-	if Input.is_action_just_pressed("crawl"):
+	if player.input_buffer.consume(&"crawl"):
 		transitioned.emit("crawlenter")  # Changed to crawlenter
 		return
 	
 	# Move slowly while crouched
 	if direction != 0:
 		player.velocity.x = direction * CROUCH_SPEED
-		player.get_node("AnimatedSprite2D").flip_h = direction < 0
+		player.sprite.flip_h = direction < 0
 	else:
 		player.velocity.x = move_toward(player.velocity.x, 0, CROUCH_SPEED)
 	

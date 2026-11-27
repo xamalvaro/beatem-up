@@ -18,7 +18,7 @@ Fighting-game players notice **input lag, dropped inputs, long recovery, and hit
 | 4 | **Hitboxes are active for the whole attack** (no startup, active or recovery frames). | `attack_state.gd:_enable_hitbox` | Hits land on frame 1, before the kick visually connects. |
 | 5 | **No hit feedback**: no hitstop (freeze frames), no enemy hitstun or knockback on normal hits, no screen shake. Zombies keep lunging while you hit them. | `enemy.gd:take_damage` | Hits feel weightless, and you trade hits instead of interrupting the enemy. |
 | 6 | **A punch hits only one enemy.** The hitbox turns itself off after its first hit. | `punch_hitbox.gd:22` | Crowds (the core of a beat 'em up) can't be hit together. |
-| 7 | **The jump probably exits on its first frame.** `is_on_floor()` still reports the previous frame, so `jump_state` immediately emits `idle` (needs an in-game check). That would leave you airborne in Idle, and air S would give a stomp instead of a drop kick. | `jump_state.gd:10-15` | Jumps play the wrong animation and the drop kick is hard to get. |
+| 7 | ~~Jump exits on its first frame~~. Checked by running the game headless: **not a bug**, the jump works. |
 | 8 | **No jump buffer, no coyote time, fixed jump height.** | `jump_state.gd`, `idle/run_state.gd` | Jumps get eaten if pressed slightly early or late. |
 | 9 | **Attack B (D) does almost nothing.** Every state's `next_attack_b` is empty. | all attack states | Half the attack buttons are unused. |
 | 10 | **You can't turn around between attacks**, and there's no dash, block or dodge. | attack states | Hard to deal with enemies on both sides. |
@@ -51,14 +51,25 @@ Fighting-game players notice **input lag, dropped inputs, long recovery, and hit
 
 Each phase is shippable on its own and can be tested in-game before moving on. Phases 1–2 fix most of the clunkiness.
 
-### Phase 1 — Responsiveness (biggest impact, small changes)
+### Phase 1 — Responsiveness (biggest impact, small changes) ✅ DONE
+
+> Done. Measured with a headless input-simulation test:
+>
+> | | Before | After |
+> |---|---|---|
+> | Single stomp, frames until free | 49 | 26 |
+> | Mashing A early | stomp → idle (presses dropped) | stomp → stomp2 → stomp3 |
+> | Tap vs hold jump height | 48.5 / 48.5 | 16.5 / 48.5 |
+> | Jump pressed just before landing | dropped | re-jumps |
+>
+> Tuning knobs: `InputBuffer.DEFAULT_WINDOW`, `COYOTE_TIME` / `JUMP_BUFFER` / `JUMP_CUT` in `main_dude.gd`, and `attack_duration` / `recovery` / `cancel_ratio` in each attack state's `_ready()`.
 
 1. **Input buffer.** Add a small `InputBuffer` (on the player or as an autoload). It records the time of each `attack_a`, `attack_b`, `jump` and `crawl` press. States call `buffer.consume("attack_a", 0.15)` instead of `Input.is_action_just_pressed`. Presses made during an attack are remembered and fire the next move as soon as it's allowed.
 2. **Cancel windows instead of lockout.**
    - Allow a combo cancel from late in the active frames onward, not only after the attack ends.
    - After recovery, return to idle/run **immediately**. Drop the "combo window" freeze; the input buffer replaces it.
    - Allow movement and jump to cancel the last ~30% of recovery.
-3. **Fix the jump.** Skip the landing check on the first physics frame (or check `velocity.y >= 0 and is_on_floor()`). Add **coyote time** (~0.1 s), a **jump buffer** (~0.1 s, via the input buffer) and **variable jump height** (cut upward velocity when the button is released).
+3. **Jump improvements.** Check for landing after `move_and_slide`, handle walking off ledges, and add **coyote time** (~0.1 s), a **jump buffer** (~0.1 s, via the input buffer) and **variable jump height** (cut upward velocity when the button is released).
 4. **Turn-around between attacks.** Read the facing direction when each attack starts.
 
 ### Phase 2 — Hit feel ("juice")

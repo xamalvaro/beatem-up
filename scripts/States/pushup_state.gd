@@ -4,7 +4,7 @@ var recovery_time: float = 0.0
 var recovery_duration: float = 0.6  # Made slightly longer
 
 func enter() -> void:
-	player.get_node("AnimatedSprite2D").play("pushup")
+	player.sprite.play("pushup")
 	recovery_time = 0.0
 	player.velocity.x = 0
 

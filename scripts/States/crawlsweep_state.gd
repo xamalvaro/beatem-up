@@ -11,7 +11,7 @@ func enter() -> void:
 	attack_finished = false
 	combo_timer = 0.0
 	player.velocity.x = 0
-	player.get_node("AnimatedSprite2D").play("sweep")
+	player.sprite.play("sweep")
 	print(">>> Entered CRAWL SWEEP state (attack from prone)")
 
 func exit() -> void:

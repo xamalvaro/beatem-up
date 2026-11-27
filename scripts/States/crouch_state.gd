@@ -3,7 +3,7 @@ extends State
 var has_attacked: bool = false
 
 func enter() -> void:
-	player.get_node("AnimatedSprite2D").play("crouch")
+	player.sprite.play("crouch")
 	player.velocity.x = 0
 	has_attacked = false
 	print(">>> Entered CROUCH state")
@@ -30,13 +30,13 @@ func physics_update(delta: float) -> void:
 		transitioned.emit("crouchwalk")
 		return
 	
-	if Input.is_action_just_pressed("attack_a") and not has_attacked:
+	if player.input_buffer.consume(&"attack_a") and not has_attacked:
 		has_attacked = true
 		print(">>> Crouch: Starting sweep attack")
 		transitioned.emit("sweep")
 		return
 	
-	if Input.is_action_just_pressed("crawl"):
+	if player.input_buffer.consume(&"crawl"):
 		print(">>> Crouch: Going into prone")
 		transitioned.emit("crawlenter")  # Changed to crawlenter
 		return

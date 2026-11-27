@@ -1,31 +1,16 @@
 extends State
 
 func enter() -> void:
-	player.get_node("AnimatedSprite2D").play("idle")
+	player.sprite.play("idle")
 
 func physics_update(delta: float) -> void:
-	# Apply gravity
-	if not player.is_on_floor():
-		player.velocity.y += player.get_gravity().y * delta
-	
-	# Check for transitions
-	var direction = Input.get_axis("ui_left", "ui_right")
-	var is_down = Input.is_action_pressed("ui_down")
-	
-	if direction != 0:
+	player.apply_gravity(delta)
+
+	if try_neutral_actions():
+		return
+	if player.get_move_input() != 0:
 		transitioned.emit("run")
-	elif Input.is_action_just_pressed("ui_accept") and player.is_on_floor():
-		transitioned.emit("jump")
-	# Directional attacks from idle
-	elif is_down and Input.is_action_just_pressed("attack_a"):
-		transitioned.emit("sweep")
-	elif is_down:
-		transitioned.emit("crouch")
-	elif Input.is_action_just_pressed("attack_a"):
-		transitioned.emit("stomp")
-	elif Input.is_action_just_pressed("crawl"):  # C to go prone
-		transitioned.emit("crawlenter")  # Changed to crawlenter
-	
-	# Apply movement
+		return
+
 	player.velocity.x = move_toward(player.velocity.x, 0, player.SPEED)
 	player.move_and_slide()

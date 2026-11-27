@@ -15,7 +15,7 @@ func enter() -> void:
 	struggle_meter = 0.0
 	damage_accumulator = 0.0
 	player.velocity = Vector2.ZERO
-	player.get_node("AnimatedSprite2D").play("struggle")  # Placeholder
+	player.sprite.play("struggle")  # Placeholder
 
 	# Show prompt above player's head
 	var ui = player.get_node_or_null("StruggleUI")
@@ -26,6 +26,7 @@ func enter() -> void:
 
 func exit() -> void:
 	grabbing_zombie = null
+	player.input_buffer.clear()  # Don't let leftover mash presses fire a stomp
 	struggle_meter = 0.0
 
 	# Hide prompt
@@ -53,7 +54,7 @@ func physics_update(delta: float) -> void:
 	struggle_meter = clamp(struggle_meter, 0.0, 1.0)
 
 	# Mash input
-	if Input.is_action_just_pressed("attack_a"):
+	if player.input_buffer.consume(&"attack_a"):
 		struggle_meter += FILL_PER_MASH
 		struggle_meter = clamp(struggle_meter, 0.0, 1.0)
 		print(">>> Mash! Meter: " + str(snapped(struggle_meter, 0.01)))

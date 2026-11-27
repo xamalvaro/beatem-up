@@ -8,7 +8,7 @@ func enter() -> void:
 	player.velocity.x = 0
 	# You might have a specific "going prone" animation
 	# For now, we'll use crawl animation
-	player.get_node("AnimatedSprite2D").play("going_prone")
+	player.sprite.play("going_prone")
 	print(">>> Entered CRAWL ENTER state (getting prone)")
 
 func exit() -> void:

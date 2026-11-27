@@ -3,6 +3,8 @@ class_name PlayerStateMachine
 
 @export var initial_state: State
 
+const DEBUG_TRANSITIONS: bool = false  # Turn on to print every state change
+
 var current_state: State
 var states: Dictionary = {}
 
@@ -17,7 +19,6 @@ func _ready() -> void:
 			states[child.name.to_lower()] = child
 			child.player = player
 			child.transitioned.connect(on_state_transition)
-			print("Registered state: " + child.name.to_lower())  # Debug print
 	
 	# Start with initial state
 	if initial_state:
@@ -49,6 +50,7 @@ func on_state_transition(new_state_name: String) -> void:
 		current_state.exit()
 	
 	# Enter new state
-	print("Transitioning: " + current_state.name + " -> " + new_state.name)
+	if DEBUG_TRANSITIONS:
+		print("Transitioning: " + current_state.name + " -> " + new_state.name)
 	current_state = new_state
 	current_state.enter()
