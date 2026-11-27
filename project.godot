@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="BeatemUp (4.6)"
+config/name="BeatemUp 4.7"
 run/main_scene="uid://dnyyok8yp7twl"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
